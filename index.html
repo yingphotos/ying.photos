@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Ying — Photography & Visual Works</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #ffffff;
+      color: #111111;
+      line-height: 1.4;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 100;
+      mix-blend-mode: difference;
+      color: white;
+    }
+
+    nav .logo {
+      font-size: 15px;
+      letter-spacing: 0.08em;
+    }
+
+    nav .menu {
+      display: flex;
+      gap: 24px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      padding: 120px 32px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hero-title {
+      font-size: clamp(64px, 12vw, 180px);
+      font-weight: 400;
+      letter-spacing: -0.06em;
+      line-height: 0.85;
+    }
+
+    .hero-subtitle {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 24px;
+    }
+
+    /* Image Placeholder */
+    .image-placeholder {
+      width: 100%;
+      background: #e8e8e8;
+      position: relative;
+    }
+
+    .image-placeholder::after {
+      content: "IMAGE";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: #888888;
+    }
+
+    .hero-image {
+      height: 65vh;
+      margin-top: 80px;
+    }
+
+    /* Sections */
+    section {
+      padding: 140px 32px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-top: 1px solid #111111;
+      padding-top: 12px;
+      margin-bottom: 70px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-number {
+      font-size: 11px;
+      color: #666666;
+    }
+
+    /* Selected Works */
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .work {
+      display: block;
+    }
+
+    .work-image {
+      aspect-ratio: 4 / 3;
+      transition: opacity 0.4s ease;
+    }
+
+    .work:hover .work-image {
+      opacity: 0.7;
+    }
+
+    .work-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+
+    /* Series */
+    .series-list {
+      border-top: 1px solid #111111;
+    }
+
+    .series-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid #cccccc;
+      font-size: 18px;
+      transition: padding 0.3s ease;
+    }
+
+    .series-item:hover {
+      padding-left: 12px;
+    }
+
+    .series-year {
+      font-size: 11px;
+      color: #666666;
+    }
+
+    /* About */
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 40px;
+    }
+
+    .about-text {
+      font-size: clamp(28px, 4vw, 54px);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    /* Contact */
+    .contact {
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .contact-title {
+      font-size: clamp(60px, 12vw, 180px);
+      font-weight: 400;
+      letter-spacing: -0.06em;
+      line-height: 0.85;
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 30px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* Footer */
+    footer {
+      padding: 24px 32px;
+      border-top: 1px solid #111111;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Mobile */
+    @media (max-width: 700px) {
+
+      nav {
+        padding: 18px 20px;
+      }
+
+      nav .menu {
+        gap: 12px;
+      }
+
+      .hero {
+        padding: 100px 20px 40px;
+      }
+
+      .hero-image {
+        height: 55vh;
+      }
+
+      section {
+        padding: 100px 20px;
+      }
+
+      .works-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .about {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .series-item {
+        font-size: 16px;
+      }
+
+      footer {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="#" class="logo">Ying</a>
+
+    <div class="menu">
+      <a href="#works">Works</a>
+      <a href="#series">Series</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+
+  <!-- Hero -->
+  <header class="hero">
+
+    <div>
+      <h1 class="hero-title">Ying</h1>
+
+      <p class="hero-subtitle">
+        Photography & Visual Works
+      </p>
+    </div>
+
+    <div class="image-placeholder hero-image"></div>
+
+  </header>
+
+
+  <!-- Selected Works -->
+  <section id="works">
+
+    <div class="section-header">
+      <h2 class="section-title">Selected Works</h2>
+      <span class="section-number">01</span>
+    </div>
+
+    <div class="works-grid">
+
+      <a href="#" class="work">
+        <div class="image-placeholder work-image"></div>
+
+        <div class="work-info">
+          <span>Untitled 01</span>
+          <span>2026</span>
+        </div>
+      </a>
+
+      <a href="#" class="work">
+        <div class="image-placeholder work-image"></div>
+
+        <div class="work-info">
+          <span>Untitled 02</span>
+          <span>2026</span>
+        </div>
+      </a>
+
+      <a href="#" class="work">
+        <div class="image-placeholder work-image"></div>
+
+        <div class="work-info">
+          <span>Untitled 03</span>
+          <span>2026</span>
+        </div>
+      </a>
+
+      <a href="#" class="work">
+        <div class="image-placeholder work-image"></div>
+
+        <div class="work-info">
+          <span>Untitled 04</span>
+          <span>2026</span>
+        </div>
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- Series -->
+  <section id="series">
+
+    <div class="section-header">
+      <h2 class="section-title">Series</h2>
+      <span class="section-number">02</span>
+    </div>
+
+    <div class="series-list">
+
+      <a href="#" class="series-item">
+        <span>Series 01 — Untitled</span>
+        <span class="series-year">2026</span>
+      </a>
+
+      <a href="#" class="series-item">
+        <span>Series 02 — Untitled</span>
+        <span class="series-year">2026</span>
+      </a>
+
+      <a href="#" class="series-item">
+        <span>Series 03 — Untitled</span>
+        <span class="series-year">2025</span>
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- About -->
+  <section id="about">
+
+    <div class="section-header">
+      <h2 class="section-title">About</h2>
+      <span class="section-number">03</span>
+    </div>
+
+    <div class="about">
+
+      <div>
+        <p>Ying</p>
+        <p>Taiwan</p>
+      </div>
+
+      <p class="about-text">
+        Photography and visual works exploring
+        everyday life, people, places and moments.
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- Contact -->
+  <section id="contact" class="contact">
+
+    <div class="section-header">
+      <h2 class="section-title">Contact</h2>
+      <span class="section-number">04</span>
+    </div>
+
+    <h2 class="contact-title">Let's talk.</h2>
+
+    <div class="contact-links">
+      <a href="#">Instagram</a>
+      <a href="#">Email</a>
+    </div>
+
+  </section>
+
+
+  <!-- Footer -->
+  <footer>
+    <span>Ying</span>
+    <span>© 2026</span>
+  </footer>
+
+</body>
+</html>
