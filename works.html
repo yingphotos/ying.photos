@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Works — Ying Photos</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@p3ol/gen-yo-min-tc@1.0.0/index.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "GenYoMin TC", "GenYoMinTC-Regular", "Noto Serif TC", serif;
+      background: #f5f4f3;
+      color: #111111;
+      line-height: 1.4;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 全螢幕轉場白幕 */
+    .page-transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #f5f4f3;
+      z-index: 9999;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .page-transition-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 頁首導覽列 */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      mix-blend-mode: difference;
+      color: white;
+    }
+
+    nav .logo {
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    nav .back-btn {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+
+    nav .back-btn:hover {
+      opacity: 0.6;
+    }
+
+    /* 頁面標題區塊 */
+    .works-header {
+      padding: 140px 32px 30px;
+    }
+
+    .page-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(60px, 10vw, 120px);
+      letter-spacing: -0.04em;
+      line-height: 0.85;
+      color: #303030;
+      font-weight: 400;
+    }
+
+    /* 篩選控制列（左右兩端對齊） */
+    .filter-container {
+      padding: 0 32px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* 左側與右側選單共用外框樣式 */
+    .sort-box, .filter-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .custom-select-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .custom-select-trigger {
+      background: transparent;
+      border: 1px solid #d0cfcd;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-family: "GenYoMin TC", "Noto Serif TC", serif;
+      color: #555;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.25s ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .custom-select-trigger:hover,
+    .custom-select-wrapper.open .custom-select-trigger {
+      border-color: #111;
+      color: #111;
+    }
+
+    .custom-select-arrow {
+      font-size: 9px;
+      transition: transform 0.3s ease;
+      display: inline-block;
+      color: #888;
+    }
+
+    .custom-select-wrapper.open .custom-select-arrow {
+      transform: rotate(180deg);
+    }
+
+    /* 下拉出來的清單列表（左右選單共用） */
+    .custom-options {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      min-width: 160px;
+      background: #f5f4f3;
+      border: 1px solid #d0cfcd;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      padding: 6px 0;
+      z-index: 50;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* 右側選單靠右對齊 */
+    .filter-box .custom-options {
+      left: auto;
+      right: 0;
+    }
+
+    .custom-select-wrapper.open .custom-options {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    /* 單選 Option 樣式 */
+    .custom-option {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-family: "GenYoMin TC", "Noto Serif TC", serif;
+      color: #555;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .custom-option:hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: #111;
+    }
+
+    .custom-option.selected {
+      color: #111;
+      font-weight: 500;
+    }
+
+    /* 多選 Checkbox Option 樣式 */
+    .checkbox-option {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-family: "GenYoMin TC", "Noto Serif TC", serif;
+      color: #555;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.2s ease, color 0.2s ease;
+      user-select: none;
+    }
+
+    .checkbox-option:hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: #111;
+    }
+
+    /* 自訂 Checkbox 框形 */
+    .checkbox-box {
+      width: 14px;
+      height: 14px;
+      border: 1px solid #aaa;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .checkbox-box::after {
+      content: "";
+      width: 4px;
+      height: 7px;
+      border: solid white;
+      border-width: 0 1.5px 1.5px 0;
+      transform: rotate(45deg) scale(0);
+      transition: transform 0.2s ease;
+      margin-bottom: 2px;
+    }
+
+    .checkbox-option.selected .checkbox-box {
+      background: #111;
+      border-color: #111;
+    }
+
+    .checkbox-option.selected .checkbox-box::after {
+      transform: rotate(45deg) scale(1);
+    }
+
+    .checkbox-option.selected {
+      color: #111;
+      font-weight: 500;
+    }
+
+    /* 圖片佔位符 */
+    .image-placeholder {
+      width: 100%;
+      background: #e8e8e8;
+      position: relative;
+    }
+
+    .image-placeholder::after {
+      content: "IMAGE";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: #888888;
+    }
+
+    /* Works 2x2 網格 */
+    .works-container {
+      padding: 0 0 100px;
+    }
+
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      width: 100%;
+    }
+
+    .work-card {
+      position: relative;
+      display: block;
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      background: #e8e8e8;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .work-card.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card-image {
+      width: 100%;
+      height: 100%;
+    }
+
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .work-card:hover .card-image img {
+      transform: scale(1.06);
+    }
+
+    .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 65%);
+      display: flex;
+      align-items: flex-end;
+      padding: 32px;
+      opacity: 0.85;
+      transition: opacity 0.4s ease;
+    }
+
+    .work-card:hover .card-overlay {
+      opacity: 1;
+    }
+
+    .card-info {
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .work-title {
+      font-size: clamp(20px, 2.2vw, 28px);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      line-height: 1.3;
+      color: #ffffff;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: flex-start;
+      align-items: baseline;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .work-date {
+      font-size: clamp(12px, 1.1vw, 14px);
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.8);
+      font-family: Arial, sans-serif;
+    }
+
+    .card-tags-list {
+      display: flex;
+      gap: 8px;
+    }
+
+    .card-tag-item {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 0.05em;
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 100px 0;
+      color: #888;
+      font-size: 16px;
+    }
+
+    /* RWD 手機版調整 */
+    @media (max-width: 768px) {
+      nav, .works-header, .filter-container {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .works-header {
+        padding-top: 110px;
+        padding-bottom: 20px;
+      }
+
+      /* 精簡內邊距與文字大小，確保手機版一左一右完美橫排 */
+      .filter-container {
+        padding-bottom: 24px;
+        gap: 8px;
+      }
+
+      .custom-select-trigger {
+        padding: 5px 12px;
+        font-size: 11px;
+        gap: 6px;
+      }
+
+      .works-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card-overlay {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-transition-overlay" id="transition-overlay"></div>
+
+  <nav>
+    <a href="index.html" class="logo">Ying</a>
+    <a href="index.html#works" class="back-btn">← Back to Selected Works</a>
+  </nav>
+
+  <main>
+    <header class="works-header">
+      <h1 class="page-title">All Works</h1>
+    </header>
+
+    <!-- 篩選與排序控制列 -->
+    <div class="filter-container">
+      <!-- 左側：自訂樣式排序選單 -->
+      <div class="sort-box">
+        <div class="custom-select-wrapper" id="custom-sort-select">
+          <div class="custom-select-trigger">
+            <span class="selected-text">日期：由近到遠</span>
+            <span class="custom-select-arrow">▼</span>
+          </div>
+          <div class="custom-options">
+            <div class="custom-option selected" data-value="desc">日期：由近到遠</div>
+            <div class="custom-option" data-value="asc">日期：由遠到近</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右側：自訂樣式類別勾選選單 -->
+      <div class="filter-box">
+        <div class="custom-select-wrapper" id="custom-filter-select">
+          <div class="custom-select-trigger">
+            <span class="selected-text">分類：全部</span>
+            <span class="custom-select-arrow">▼</span>
+          </div>
+          <div class="custom-options">
+            <div class="checkbox-option" data-tag="靜態">
+              <div class="checkbox-box"></div>
+              <span>#靜態</span>
+            </div>
+            <div class="checkbox-option" data-tag="動態">
+              <div class="checkbox-box"></div>
+              <span>#動態</span>
+            </div>
+            <div class="checkbox-option" data-tag="文字">
+              <div class="checkbox-box"></div>
+              <span>#文字</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Works 網格區塊 -->
+    <section class="works-container">
+      <div class="works-grid" id="works-grid">
+        <!-- 由 JavaScript 動態繪製 -->
+      </div>
+    </section>
+  </main>
+
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // 所有作品資料陣列
+    const allProjects = [
+      { id: "work-10", title: "西昌街的黃昏", date: "2025.04.13", url: "work-10.html", cover: "./images/work-10/work-10-1.jpg", tags: ["靜態", "文字"] },
+      { id: "work-1", title: "老鐵舖的餘溫", date: "2025.04.14", url: "work-1.html", cover: "./images/work-1/work-1-16.jpg", tags: ["靜態", "文字"] },
+      { id: "work-11", title: "發美皮鞋店", date: "2025.05.03", url: "work-11.html", cover: "./images/work-11/work-11-1.jpg", tags: ["靜態"] },
+      { id: "work-9", title: "繞境城事", date: "2025.05.04", url: "work-9.html", cover: "./images/work-9/work-9-11.jpg", tags: ["靜態", "文字"] },
+      { id: "work-2", title: "2025馬祖國際藝術島", date: "2025.11.07-10", url: "work-2.html", cover: "./images/work-2/work-2-29.jpg", tags: ["靜態"] },
+      { id: "work-7", title: "第四十三屆政大金旋獎年度形象音樂", date: "2026.01.17", url: "work-7.html", cover: "./images/work-7/work-7.jpg", tags: ["動態"] },
+      { id: "work-3", title: "228・0紀念行動", date: "2026.02.27", url: "work-3.html", cover: "./images/work-3/work-3-7.jpg", tags: ["靜態"] },
+      { id: "work-12", title: "台日友好 青森睡魔抵嘉", date: "2026.02.07 / 03.06", url: "work-12.html", cover: "./images/work-12/work-12-1.jpg", tags: ["靜態", "文字"] },
+      { id: "work-8", title: "「真和平，要國防」大遊行", date: "2026.05.23", url: "work-8.html", cover: "./images/work-8/work-8-21.jpg", tags: ["靜態"] },
+      { id: "work-13", title: "鹿港國際龍舟錦標賽", date: "2026.06.19", url: "work-13.html", cover: "./images/work-13/work-13-12.jpg", tags: ["靜態"] },
+      { id: "work-5", title: "與大道公等雨", date: "2026.06.22", url: "work-5.html", cover: "./images/work-5/work-5.jpg", tags: ["動態", "文字"] },
+      { id: "work-4", title: "台北迎城隍系列", date: "2026.06.25、27", url: "work-4.html", cover: "./images/work-4/暗訪夜巡-1.jpg", tags: ["靜態", "動態"] },
+      { id: "work-6", title: "浪漫屋", date: "2026.07.06", url: "work-6.html", cover: "./images/work-6/work-6-10.jpg", tags: ["靜態", "文字"] },
+      { id: "work-14", title: "雞籠中元祭", date: "2026.08.26", url: "work-14.html", cover: "./images/work-14/work-14-28.jpg", tags: ["靜態", "動態", "文字"] },
+      { id: "work-15", title: "溪洲記事：溪洲部落豐年祭", date: "2026.08", url: "work-15-index.html", cover: "./images/work-15/work-15-4-29.jpg", tags: ["靜態", "文字"] },
+      { id: "work-16", title: "跟著臺灣漫遊錄吃遍台灣", date: "2026", url: "work-16-index.html", cover: "./images/work-16/work-16-1.jpg", tags: ["靜態", "文字"] },
+      { id: "work-17", title: "Fountain Day 新竹篇", date: "2026.05.14", url: "work-17.html", cover: "./images/work-17/work-17-1.jpg", tags: ["動態", "文字"] },
+      { id: "work-18", title: "青鳥運動", date: "2024.05", url: "work-18.html", cover: "./images/work-18/work-18-7.jpg", tags: ["靜態", "文字"] }
+    ];
+
+    let selectedTags = new Set();
+    let sortOrder = "desc";
+    let observer;
+
+    // 解析字串日期為時間戳
+    function parseProjectDate(dateStr) {
+      if (!dateStr) return 0;
+      const match = dateStr.match(/(\d{4})(?:\.(\d{1,2}))?(?:\.(\d{1,2}))?/);
+      if (match) {
+        const year = parseInt(match[1], 10);
+        const month = match[2] ? parseInt(match[2], 10) - 1 : 0;
+        const day = match[3] ? parseInt(match[3], 10) : 1;
+        return new Date(year, month, day).getTime();
+      }
+      return 0;
+    }
+
+    // 初始化 Intersection Observer (捲動淡入效果)
+    function initObserver() {
+      if (observer) observer.disconnect();
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      }, { threshold: 0.05 });
+
+      document.querySelectorAll('.work-card').forEach(el => observer.observe(el));
+    }
+
+    // 渲染作品卡片
+    function renderWorks() {
+      const grid = document.getElementById('works-grid');
+      if (!grid) return;
+
+      // 1. 標籤篩選 (需同時符合所有已勾選的標籤)
+      let filtered = allProjects.filter(project => {
+        return selectedTags.size === 0 || Array.from(selectedTags).every(tag => project.tags.includes(tag));
+      });
+
+      // 2. 日期排序
+      filtered.sort((a, b) => {
+        const timeA = parseProjectDate(a.date);
+        const timeB = parseProjectDate(b.date);
+        return sortOrder === 'desc' ? timeB - timeA : timeA - timeB;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="no-results">沒有找到符合條件的作品。</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => `
+        <a href="${p.url}" class="work-card">
+          <div class="card-image">
+            <img src="${p.cover}" alt="${p.title}" onerror="this.parentNode.classList.add('image-placeholder')">
+          </div>
+          <div class="card-overlay">
+            <div class="card-info">
+              <h3 class="work-title">${p.title}</h3>
+              <div class="card-meta">
+                <span class="work-date">${p.date}</span>
+                <div class="card-tags-list">
+                  ${p.tags.map(t => `<span class="card-tag-item">#${t}</span>`).join(' ')}
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      `).join('');
+
+      initObserver();
+      bindTransitionLinks();
+    }
+
+    // --- 左側排序選單互動邏輯 ---
+    const sortWrapper = document.getElementById('custom-sort-select');
+    const sortTrigger = sortWrapper.querySelector('.custom-select-trigger');
+    const sortText = sortWrapper.querySelector('.selected-text');
+    const sortOptions = sortWrapper.querySelectorAll('.custom-option');
+
+    sortTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      filterWrapper.classList.remove('open'); // 關閉另一個選單
+      sortWrapper.classList.toggle('open');
+    });
+
+    sortOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        const value = option.getAttribute('data-value');
+        sortText.textContent = option.textContent;
+        sortOrder = value;
+
+        sortOptions.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+
+        sortWrapper.classList.remove('open');
+        renderWorks();
+      });
+    });
+
+    // --- 右側多選分類選單互動邏輯 ---
+    const filterWrapper = document.getElementById('custom-filter-select');
+    const filterTrigger = filterWrapper.querySelector('.custom-select-trigger');
+    const filterText = filterWrapper.querySelector('.selected-text');
+    const filterOptions = filterWrapper.querySelectorAll('.checkbox-option');
+
+    filterTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sortWrapper.classList.remove('open'); // 關閉另一個選單
+      filterWrapper.classList.toggle('open');
+    });
+
+    filterOptions.forEach(option => {
+      option.addEventListener('click', (e) => {
+        e.stopPropagation(); // 保持下拉選單開啟，方便繼續勾選
+        const tag = option.getAttribute('data-tag');
+
+        if (selectedTags.has(tag)) {
+          selectedTags.delete(tag);
+          option.classList.remove('selected');
+        } else {
+          selectedTags.add(tag);
+          option.classList.add('selected');
+        }
+
+        // 更新外框顯示文字
+        if (selectedTags.size === 0) {
+          filterText.textContent = "分類：全部";
+        } else {
+          filterText.textContent = `分類：${Array.from(selectedTags).map(t => '#' + t).join(' ')}`;
+        }
+
+        renderWorks();
+      });
+    });
+
+    // 點擊頁面空白處關閉選單
+    document.addEventListener('click', () => {
+      sortWrapper.classList.remove('open');
+      filterWrapper.classList.remove('open');
+    });
+
+    // 頁面轉場與載入控制
+    const overlay = document.getElementById('transition-overlay');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.scrollTo(0, 0);
+      renderWorks();
+      setTimeout(() => {
+        if (overlay) overlay.classList.add('hidden');
+      }, 100);
+    });
+
+    window.addEventListener('pageshow', () => {
+      if (overlay) overlay.classList.add('hidden');
+    });
+
+    function bindTransitionLinks() {
+      document.querySelectorAll('a[href]').forEach(anchor => {
+        const href = anchor.getAttribute('href');
+        const target = anchor.getAttribute('target');
+
+        if (href && !href.startsWith('#') && !href.startsWith('javascript:') && target !== '_blank') {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (overlay) {
+              overlay.classList.remove('hidden');
+              setTimeout(() => {
+                window.location.href = href;
+              }, 350);
+            } else {
+              window.location.href = href;
+            }
+          });
+        }
+      });
+    }
+  </script>
+</body>
+</html>

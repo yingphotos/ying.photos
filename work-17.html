@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日進花影 活水營新竹篇 — Ying Photos</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@p3ol/gen-yo-min-tc@1.0.0/index.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "GenYoMin TC", "GenYoMinTC-Regular", "Noto Serif TC", serif;
+      background: #f5f4f3;
+      color: #111111;
+      line-height: 1.8;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 全螢幕轉場白幕 */
+    .page-transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #f5f4f3;
+      z-index: 9999;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .page-transition-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 固定頁首導覽列 */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      mix-blend-mode: difference;
+      color: white;
+    }
+
+    nav .logo {
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    .back-btn {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      opacity: 0.6;
+    }
+
+    /* 專題 Header 區塊 */
+    .project-hero {
+      padding: 140px 32px 16px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .project-header {
+      margin-bottom: 0;
+    }
+
+    .project-title {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+
+    .project-date {
+      font-size: 14px;
+      color: #666;
+      font-family: Arial, sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+    /* 單一影片專用配置區塊 */
+    .single-media-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 32px 60px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 56px;
+      align-items: start;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 2s cubic-bezier(0.16, 1, 0.3, 1), transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .single-media-section.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      background: #000;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .section-desc {
+      font-size: 17px;
+      line-height: 2.1;
+      color: #2c2c2c;
+      letter-spacing: 0.05em;
+      text-align: justify;
+    }
+
+    .section-desc p {
+      margin-bottom: 20px;
+    }
+
+    .section-desc p:last-child {
+      margin-bottom: 0;
+    }
+
+    .credit-list {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #e0dfdd;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.9;
+    }
+
+    /* 底部導覽按鈕區（單向右對齊） */
+    .project-footer-nav {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 32px 32px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+    }
+
+    .nav-link-next {
+      text-align: right;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #888;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .nav-title {
+      font-size: 18px;
+      color: #111;
+      transition: opacity 0.3s ease;
+      line-height: 1.2;
+    }
+
+    .nav-title:hover {
+      opacity: 0.5;
+    }
+
+    /* ---------------------------------------------------- */
+    /* 推薦區塊 (同 work-1 / 2x2 網格樣式) */
+    /* ---------------------------------------------------- */
+    .recommend-section {
+      padding: 80px 32px 120px;
+      border-top: 1px solid #e0dfdd;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .recommend-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(32px, 4vw, 48px);
+      margin-bottom: 32px;
+      font-weight: 400;
+    }
+
+    .recommend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .recommend-card {
+      display: block;
+    }
+
+    .recommend-image {
+      width: 100%;
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      background: #e8e8e8;
+      margin-bottom: 16px;
+    }
+
+    .recommend-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .recommend-card:hover .recommend-image img {
+      transform: scale(1.05);
+    }
+
+    .recommend-info-title {
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+
+    .recommend-info-date {
+      font-size: 12px;
+      color: #777;
+    }
+
+    .image-placeholder {
+      position: relative;
+      min-height: 400px;
+    }
+
+    /* Lightbox Modal */
+    .image-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.88);
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: zoom-out;
+      padding: 40px;
+    }
+
+    .image-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .image-modal img {
+      max-width: 92vw;
+      max-height: 92vh;
+      object-fit: contain;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      transform: scale(0.96);
+    }
+
+    .image-modal.active img {
+      transform: scale(1);
+    }
+
+    .image-modal-close {
+      position: absolute;
+      top: 28px;
+      right: 32px;
+      font-size: 28px;
+      font-weight: 300;
+      color: #ffffff;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+      user-select: none;
+    }
+
+    .image-modal-close:hover {
+      opacity: 1;
+    }
+
+    /* RWD 手機版樣式 */
+    @media (max-width: 768px) {
+      nav, .project-hero, .single-media-section, .project-footer-nav, .recommend-section {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .project-hero {
+        padding-top: 110px;
+        padding-bottom: 20px;
+      }
+
+      .single-media-section {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .section-desc {
+        font-size: 16px;
+        line-height: 1.95;
+      }
+
+      .recommend-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-transition-overlay" id="transition-overlay"></div>
+
+  <!-- 圖片放大 Fullscreen Lightbox Modal -->
+  <div class="image-modal" id="image-modal">
+    <span class="image-modal-close" id="image-modal-close">✕</span>
+    <img src="" alt="" id="image-modal-img">
+  </div>
+
+  <nav>
+    <a href="index.html" class="logo">Ying</a>
+    <a href="works.html" class="back-btn">← Back to Works</a>
+  </nav>
+
+  <main>
+    <header class="project-hero">
+      <div class="project-header">
+        <h1 class="project-title">日進花影 活水營新竹篇</h1>
+        <p class="project-date">2026.05.14</p>
+      </div>
+    </header>
+
+    <section class="single-media-section story-block">
+      <div class="video-container">
+        <iframe 
+          src="https://www.youtube.com/embed/a5SnHzfd5ek" 
+          title="日進花影 活水營新竹篇 Video" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+          allowfullscreen>
+        </iframe>
+      </div>
+      <div class="section-desc">
+        <p>【Fountain Day 新竹篇】 日進花影</p>
+        <p>你知道台灣第一位女畫家是誰嗎？你曾經聽過「台展三少年」嗎？也許你也和我一樣，是在2016年的台劇《紫色大稻埕》裡認識了那群寫下台灣美術史的少年畫家，陳進當然也是其中之一。</p>
+        <p>1927年，赴日學畫的陳進以20歲之齡入選台灣美展，當時能入選這場官辦展覽的台灣人，只有她與林玉山和郭雪湖三人。而陳進年輕、台灣、女性的多重身分，自此也為台灣畫壇開創了嶄新格局。</p>
+        <p>身為被殖民者，同時身為女性，在雙重弱勢的考驗下，陳進成功用獨特的筆觸向時代證明，能力不分國族也不分性別。在戰後，她的被殖民身分始終遭到畫壇質疑，陳進的作品題材也因為步入家庭生育，而逐漸轉向家庭生活的日常。</p>
+        <p>一個時代的壓抑能使一個人噤聲，卻也能因此結出更有韌性的果實。時代雖然變了，但不變的是，陳進自始至終都認為台灣人就應該畫自己的畫，抱著謙卑的心，為台灣人說出屬於台灣人的故事。</p>
+        <p>「我這輩子沒做什麼，就是一直畫畫」——陳進。</p>
+        <br>
+        <p>新活水Fountain是一本以拓展台灣文化為核心的雜誌，除了精緻的紙本內容，也致力於推廣各種型態的文化活動。</p>
+        <p>Fountain Day是新活水以地方歷史文化為主軸策劃的一日營隊，透過講座、手作、走讀、美食等形式，讓青年從生活中的每個層面重新開啟感知文化的感官。</p>
+        <p>這次的Fountain Day，新活水帶著我們重訪陳進的出生地新竹，重新走過陳進的故事與足跡，透過特色美食認識新竹，同時也親手體驗香山的藍染產業。很榮幸我能以文化總會校園大使的身分參與了營隊，我也貢獻了自己的一點點力量，為Fountain Day紀錄下了美麗的瞬間。</p>
+        <p>一直以來，我對我的家鄉新竹都沒有很深刻的認同感，也許是因為我在新竹度過的時間只有懵懂的少年時期，也或許是因為這座城市真的在慢慢變得更好。漫步在老街屋林立的舊城區中，看著老舊卻依然容光煥發的山牆、色彩淡雅又不失高貴的面磚，我那雙早已習慣台北節奏的腳步不自覺放慢了下來。我想我已經重新開始慢慢愛上這座城市。</p>
+        <p>有越來越多獨立的品牌把老屋的故事與創新產業合為一體，用年輕人能接受、能接近的方式重新訴說這座城市的歷史文化。能夠親身融入其中，我也覺得有如一渠活水注入靈魂，思緒和眼界都變得更加清晰。看著木格窗篩過日光斜射進屋子裡，把學員們手作的藍染照得透亮，我彷彿能看見百年來人們在這裡生活的時空縮影，我能讀懂文化給人帶來的安定與認同感，我想這個美麗的瞬間，大概就是日進花影的意思吧！</p>
+
+        <div class="credit-list">
+          主辦單位｜NCAT 文化總會 @ncat_tw ｜Fountain 新活水 @fountain.tw<br>
+          主視覺設計｜扣乙龱設 吳珮瑜 Koi<br>
+          講師｜謝世英博士｜好筍出品 王昱登｜Dye 業dyeye studio 連威棣｜插畫家 張梓鈞<br>
+          場地｜或者新州屋｜或者工藝櫥窗｜辛志平校長故居<br>
+          -<br>
+          Video directed / edited by WHY
+        </div>
+      </div>
+    </section>
+
+    <!-- 隨機推薦專案區塊 (MORE WORKS / 2x2 Grid) -->
+    <section class="recommend-section">
+      <h2 class="recommend-title">More Works</h2>
+      <div class="recommend-grid" id="recommend-grid">
+        <!-- 由 JavaScript 動態生成 4 個推薦專題 -->
+      </div>
+    </section>
+  </main>
+
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // 捲動淡入效果
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.story-block').forEach(el => observer.observe(el));
+
+    // 頁面轉場淡入
+    const overlay = document.getElementById('transition-overlay');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        if (overlay) overlay.classList.add('hidden');
+      }, 100);
+    });
+
+    window.addEventListener('pageshow', () => {
+      if (overlay) overlay.classList.add('hidden');
+    });
+
+    // 動態綁向轉場動畫至連結
+    function bindTransitionLinks() {
+      document.querySelectorAll('a[href]').forEach(anchor => {
+        if (anchor.dataset.bound) return;
+        anchor.dataset.bound = "true";
+
+        const href = anchor.getAttribute('href');
+        const target = anchor.getAttribute('target');
+
+        if (href && !href.startsWith('#') && !href.startsWith('javascript:') && target !== '_blank') {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (overlay) {
+              overlay.classList.remove('hidden');
+              setTimeout(() => {
+                window.location.href = href;
+              }, 350);
+            } else {
+              window.location.href = href;
+            }
+          });
+        }
+      });
+    }
+
+    // ----------------------------------------------------
+    // 動態推薦專案（排除當前頁面，隨機抽最多 4 個）
+    // ----------------------------------------------------
+    const CURRENT_WORK_ID = "work-17";
+
+    const allProjects = [
+      { id: "work-1", title: "老鐵舖的餘溫", date: "2025.04.14", url: "work-1.html", cover: "./images/work-1/work-1-16.jpg" },
+      { id: "work-2", title: "2025馬祖國際藝術島", date: "2025.11.07-10", url: "work-2.html", cover: "./images/work-2/work-2-29.jpg" },
+      { id: "work-3", title: "228・0紀念行動", date: "2026.02.27", url: "work-3.html", cover: "./images/work-3/work-3-7.jpg" },
+      { id: "work-4", title: "台北迎城隍系列", date: "2026.06.25、27", url: "work-4.html", cover: "./images/work-4/暗訪夜巡-1.jpg" },
+      { id: "work-5", title: "與大道公等雨", date: "2026.06.22", url: "work-5.html", cover: "./images/work-5/work-5.jpg" },
+      { id: "work-6", title: "浪漫屋", date: "2026.07.06", url: "work-6.html", cover: "./images/work-6/work-6-1.jpg" },
+      { id: "work-11", title: "發美皮鞋店", date: "2025.05.03", url: "work-11.html", cover: "./images/work-11/work-11-1.jpg" },
+      { id: "work-12", title: "台日友好 青森睡魔抵嘉", date: "2026.02.07 / 03.06", url: "work-12.html", cover: "./images/work-12/work-12-1.jpg" },
+      { id: "work-13", title: "鹿港國際龍舟錦標賽", date: "2026.06.19", url: "work-13.html", cover: "./images/work-13/work-13-1.jpg" },
+      { id: "work-14", title: "雞籠中元祭", date: "2026.06.19", url: "work-14.html", cover: "./images/work-14/work-14-1.jpg" },
+      { id: "work-15", title: "溪洲記事：溪洲部落豐年祭", date: "2026.07/08", url: "work-15-index.html", cover: "./images/work-15/work-15-4-29.jpg" },
+      { id: "work-16", title: "跟著《臺灣漫遊錄》吃遍台灣", date: "2026", url: "work-16-index.html", cover: "./images/work-16/work-16-1.jpg" },
+      { id: "work-17", title: "日進花影 活水營新竹篇", date: "2026.05.14", url: "work-17.html", cover: "./images/work-17/work-17-1.jpg" },
+      { id: "work-18", title: "青鳥運動", date: "2024.05", url: "work-18.html", cover: "./images/work-18/work-18-1.jpg" }
+    ];
+
+    function renderRecommendations() {
+      const otherProjects = allProjects.filter(p => p.id !== CURRENT_WORK_ID);
+      
+      for (let i = otherProjects.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [otherProjects[i], otherProjects[j]] = [otherProjects[j], otherProjects[i]];
+      }
+
+      const selected = otherProjects.slice(0, 4);
+
+      const grid = document.getElementById('recommend-grid');
+      if (!grid) return;
+
+      grid.innerHTML = selected.map(p => `
+        <a href="${p.url}" class="recommend-card">
+          <div class="recommend-image">
+            <img src="${p.cover}" alt="${p.title}" onerror="this.parentNode.classList.add('image-placeholder')">
+          </div>
+          <div class="recommend-info">
+            <h3 class="recommend-info-title">${p.title}</h3>
+            <span class="recommend-info-date">${p.date}</span>
+          </div>
+        </a>
+      `).join('');
+
+      bindTransitionLinks();
+    }
+
+    renderRecommendations();
+
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('image-modal-img');
+    const modalClose = document.getElementById('image-modal-close');
+
+    document.querySelectorAll('.single-media-section img').forEach(img => {
+      img.addEventListener('click', () => {
+        if (img.src) {
+          modalImg.src = img.src;
+          modalImg.alt = img.alt || '';
+          modal.classList.add('active');
+        }
+      });
+    });
+
+    function closeModal() {
+      if (modal) modal.classList.remove('active');
+    }
+
+    if (modal) modal.addEventListener('click', closeModal);
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

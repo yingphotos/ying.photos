@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>溪洲記事其三：Ilisin — Ying Photos</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@p3ol/gen-yo-min-tc@1.0.0/index.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "GenYoMin TC", "GenYoMinTC-Regular", "Noto Serif TC", serif;
+      background: #f5f4f3;
+      color: #111111;
+      line-height: 1.8;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 全螢幕轉場白幕 */
+    .page-transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #f5f4f3;
+      z-index: 9999;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .page-transition-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 固定頁首導覽列 */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      mix-blend-mode: difference;
+      color: white;
+    }
+
+    nav .logo {
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    .back-btn {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      opacity: 0.6;
+    }
+
+    /* 專題 Header 區塊 */
+    .project-hero {
+      padding: 140px 32px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .project-title {
+      font-size: clamp(28px, 4.5vw, 48px);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .project-date {
+      font-size: 14px;
+      color: #666;
+      letter-spacing: 0.05em;
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    /* 專題主文章容器 */
+    .story-article {
+      width: 100%;
+      padding: 0 0 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* 動態淡入單元 */
+    .story-block {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1), transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .story-block.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 純文字區塊 */
+    .story-text-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 32px;
+      width: 100%;
+    }
+
+    .story-text {
+      font-size: 18px;
+      line-height: 1.95;
+      color: #2c2c2c;
+      letter-spacing: 0.05em;
+      width: 100%;
+      text-align: justify;
+    }
+
+    .story-text p {
+      margin-bottom: 20px;
+    }
+
+    .story-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* 日期小標題樣式 */
+    .date-heading {
+      font-size: 20px;
+      font-weight: 500;
+      color: #111;
+      margin-bottom: 16px;
+      letter-spacing: 0.06em;
+    }
+
+    /* 左圖右文 (50/50 Split) 樣式 - 靠頂端對齊，允許文字高度留白 */
+    .split-50-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 32px;
+      width: 100%;
+      display: flex;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .split-image-left {
+      flex: 1 1 50%;
+      background: #e8e8e8;
+      overflow: hidden;
+    }
+
+    .split-image-left img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .split-image-left img:hover {
+      transform: scale(1.01);
+    }
+
+    .split-text-right {
+      flex: 1 1 50%;
+    }
+
+    /* 單張滿版圖樣式 */
+    .full-width-image {
+      width: 100%;
+      background: #e8e8e8;
+      overflow: hidden;
+    }
+
+    .full-width-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .full-width-image img:hover {
+      transform: scale(1.01);
+    }
+
+    /* 無縫多圖連續排列 (Grid 2欄與3欄) */
+    .grid-2-wrapper, .grid-3-wrapper {
+      width: 100%;
+    }
+
+    .image-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+    }
+
+    .image-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+
+    .grid-image-item {
+      width: 100%;
+      background: #e8e8e8;
+      overflow: hidden;
+    }
+
+    .grid-image-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      cursor: zoom-in;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .grid-image-item img:hover {
+      transform: scale(1.02);
+    }
+
+    /* 占位符樣式 */
+    .image-placeholder {
+      position: relative;
+      min-height: 220px;
+    }
+
+    .image-placeholder::after {
+      content: "IMAGE MISSING";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #999;
+    }
+
+    /* 頁尾導覽按鈕區 */
+    .project-footer-nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 32px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .nav-link-next {
+      text-align: right;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #888;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .nav-title {
+      font-size: 18px;
+      color: #111;
+      transition: opacity 0.3s ease;
+      line-height: 1.2;
+    }
+
+    .nav-title:hover {
+      opacity: 0.5;
+    }
+
+    /* 推薦區塊 (MORE WORKS) */
+    .recommend-section {
+      padding: 80px 32px 120px;
+      border-top: 1px solid #e0dfdd;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .recommend-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(32px, 4vw, 48px);
+      margin-bottom: 32px;
+      font-weight: 400;
+    }
+
+    .recommend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .recommend-card {
+      display: block;
+    }
+
+    .recommend-image {
+      width: 100%;
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      background: #e8e8e8;
+      margin-bottom: 16px;
+    }
+
+    .recommend-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .recommend-card:hover .recommend-image img {
+      transform: scale(1.05);
+    }
+
+    .recommend-info-title {
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+
+    .recommend-info-date {
+      font-size: 12px;
+      color: #777;
+    }
+
+    /* Lightbox Modal */
+    .image-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.88);
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: zoom-out;
+      padding: 40px;
+    }
+
+    .image-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .image-modal img {
+      max-width: 92vw;
+      max-height: 92vh;
+      object-fit: contain;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      transform: scale(0.96);
+    }
+
+    .image-modal.active img {
+      transform: scale(1);
+    }
+
+    .image-modal-close {
+      position: absolute;
+      top: 28px;
+      right: 32px;
+      font-size: 28px;
+      font-weight: 300;
+      color: #ffffff;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+      user-select: none;
+    }
+
+    .image-modal-close:hover {
+      opacity: 1;
+    }
+
+    /* RWD 手機版樣式 */
+    @media (max-width: 900px) {
+      .split-50-wrapper {
+        flex-direction: column;
+        gap: 32px;
+      }
+
+      .split-image-left, .split-text-right {
+        width: 100%;
+        flex: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav, .project-hero, .story-text-container, .split-50-wrapper, .project-footer-nav, .recommend-section {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .project-hero {
+        padding-top: 110px;
+        padding-bottom: 20px;
+      }
+
+      .story-text {
+        font-size: 16px;
+        line-height: 1.9;
+      }
+
+      .image-grid-2, .image-grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .recommend-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-transition-overlay" id="transition-overlay"></div>
+
+  <div class="image-modal" id="image-modal">
+    <span class="image-modal-close" id="image-modal-close">✕</span>
+    <img src="" alt="" id="image-modal-img">
+  </div>
+
+  <nav>
+    <a href="index.html" class="logo">Ying</a>
+    <a href="work-15-index.html" class="back-btn">← Back</a>
+  </nav>
+
+  <main>
+    <header class="project-hero">
+      <h1 class="project-title">溪洲記事其三：Ilisin</h1>
+      <span class="project-date">2026.08.28 - 08.29</span>
+    </header>
+
+    <article class="story-article">
+
+      <section class="story-block">
+        <div class="split-50-wrapper">
+          <div class="split-image-left">
+            <img src="./images/work-15/work-15-3-1.jpg" alt="溪洲記事其三-1" onerror="this.parentNode.classList.add('image-placeholder')">
+          </div>
+          <div class="split-text-right">
+            <div class="story-text">
+              <h2 class="date-heading">8月28日，豐年祭前一日。迎祖靈、除穢。</h2>
+              <p>溪洲部落出現了許多前兩次沒看過的面孔，這次族人們不再穿著便服，而是身穿鮮紅色的片褲，右腳掛著鈴鐺，由右至左背著情人袋。頭目則一甩日常形象，穿上紅色連身衣，頭戴飾有獸骨與鳥羽的頭冠，十分醒目。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-3-wrapper">
+          <div class="image-grid-3">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-2.jpg" alt="溪洲記事其三-2" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-3.jpg" alt="溪洲記事其三-3" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-4.jpg" alt="溪洲記事其三-4" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>青年們早早將小米、南瓜、芋頭、秋葵和糯米放在祖靈石的供桌上，並在一旁燃起爐火。時間一到，頭目率領眾人聚集到廣場進行儀式，前頭目則在一旁指導剛上任的頭目。在歌舞聲中，青年將濕芒草蓋在爐火上，升起狼煙。阿美族人相信，狼煙是聯繫祖靈與部落的管道，因此在豐年祭期間，這道煙不能熄滅，必須派人徹夜顧火。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-2-wrapper">
+          <div class="image-grid-2">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-5.jpg" alt="溪洲記事其三-5" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-6.jpg" alt="溪洲記事其三-6" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-7.jpg" alt="溪洲記事其三-7" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-8.jpg" alt="溪洲記事其三-8" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-9.jpg" alt="溪洲記事其三-9" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-10.jpg" alt="溪洲記事其三-10" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-11.jpg" alt="溪洲記事其三-11" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-12.jpg" alt="溪洲記事其三-12" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>晚餐依舊是族人的超好吃餐點，米飯與豬肉自不用提，炒絲瓜、炒竹筍、魚頭湯都充滿了鍋氣，那經典的辣椒醬油當然也沒有缺席。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-2-wrapper">
+          <div class="image-grid-2">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-13.jpg" alt="溪洲記事其三-13" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-14.jpg" alt="溪洲記事其三-14" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>飯後，重頭戲上場。青年們在廣場圍繞成圈，為明日的豐年祭練舞。空氣中已經沒有之前略顯散漫的態度，穿上族服，每個人都是真正的阿美族青年。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-2-wrapper">
+          <div class="image-grid-2">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-15.jpg" alt="溪洲記事其三-15" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-16.jpg" alt="溪洲記事其三-16" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-17.jpg" alt="溪洲記事其三-17" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-18.jpg" alt="溪洲記事其三-18" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>部落的女性則在祭司的帶領之下，一起踏著整齊的節奏唱著歌，挨家挨戶拜訪敬酒，進行除穢儀式。族人的歌聲響亮得直入肌骨，從開始到結束超過半個小時從未中斷，我想對岸的IKEA大概也能聽得一清二楚。這個畫面真的美得不可思議。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-2-wrapper">
+          <div class="image-grid-2">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-19.jpg" alt="溪洲記事其三-19" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-20.jpg" alt="溪洲記事其三-20" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-21.jpg" alt="溪洲記事其三-21" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-22.jpg" alt="溪洲記事其三-22" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-23.jpg" alt="溪洲記事其三-23" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-24.jpg" alt="溪洲記事其三-24" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-25.jpg" alt="溪洲記事其三-25" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-26.jpg" alt="溪洲記事其三-26" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>最後男女在廣場合流，一起做最後的練習。難以想像在一個月之前，族人們還在文健站裡面面相覷，忘記旋律和舞蹈。練習結束後，男女各自圍坐成一圈喝酒聊天。我們則第一次被族人們拉進圈圈裡做自我介紹。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-2-wrapper">
+          <div class="image-grid-2">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-27.jpg" alt="溪洲記事其三-27" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-28.jpg" alt="溪洲記事其三-28" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-29.jpg" alt="溪洲記事其三-29" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-3-30.jpg" alt="溪洲記事其三-30" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>狼煙一整夜都沒有熄滅。</p>
+            <br>
+            <h2 class="date-heading">8月29日，Ilisin。</h2>
+            <p>Ilisin是阿美族語的豐年祭。</p>
+            <p>男人清晨五點就起來殺豬分裝給各家，牧師引領耆老們做晨禱。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-3-wrapper">
+          <div class="image-grid-3">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-1.jpg" alt="溪洲記事其三-4-1" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-2.jpg" alt="溪洲記事其三-4-2" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-3.jpg" alt="溪洲記事其三-4-3" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>今天的第一個重要任務，是報訊息。報訊息最原始的用意，是要將舉辦豐年祭的消息傳遞給友好的部落，所以由部落青年帶著信物徒步跑至另一個部落傳遞訊息。不過隨著時代演進與部落北移，溪洲部落的報訊息，是跑到里長家邀請里長前往參加豐年祭。這裡的里長十分支持溪洲部落，不只早就贊助了好幾箱飲料給部落，也在辦公室準備了水果飲料給部落青年。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-2-wrapper">
+          <div class="image-grid-2">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-4.jpg" alt="溪洲記事其三-4-4" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-5.jpg" alt="溪洲記事其三-4-5" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-6.jpg" alt="溪洲記事其三-4-6" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-7.jpg" alt="溪洲記事其三-4-7" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-8.jpg" alt="溪洲記事其三-4-8" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-9.jpg" alt="溪洲記事其三-4-9" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="split-50-wrapper">
+          <div class="split-image-left">
+            <img src="./images/work-15/work-15-4-10.jpg" alt="溪洲記事其三-4-10" onerror="this.parentNode.classList.add('image-placeholder')">
+          </div>
+          <div class="split-text-right">
+            <div class="story-text">
+              <p>回到部落時，已經有許多其他部落的頭目，還有局處長官與候選人來到會場。頭目的神情略顯緊繃，也許跟外人打交道，遠比統率部落來得困難。頭目也說，雖然都是阿美族，但各個部落的語言也不盡相同，因此要學習這裡的儀式，幾乎就像是要重新學習一套語言系統。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>女性族人隨後穿著族服華麗登場。鮮紅色的上衣與片裙在太陽下顯得更加耀眼，花色各不相同的胸巾與瑪瑙項鍊是展現個人特色的好機會；不過最搶眼的，還是雪白的羽毛頭冠，以鮮艷的羽毛和珠子裝飾，在舞蹈的節奏下就像翩翩起舞的飛鳥。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-2-wrapper">
+          <div class="image-grid-2">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-11.jpg" alt="溪洲記事其三-4-11" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-12.jpg" alt="溪洲記事其三-4-12" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-13.jpg" alt="溪洲記事其三-4-13" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-14.jpg" alt="溪洲記事其三-4-14" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>溪洲部落的豐年祭有種都市的氣息。在一整天的節目表裡，除了傳統歌舞，有更多的是老中青各自準備的表演。青年們頂著烈日跳韓團的舞蹈，中老年人手持彩球與卡通道具跳舞，不僅如此，還有砍竹子、破氣球等等的趣味競賽。這個場合給了族人充分的舞台，另一頭在帳篷裡乘涼的長官候選人們卻自顧自的聊天發贈品，就連前頭目在說重要的話，也被帳篷裡的嘈雜聲完全蓋過，實有喧賓奪主的感覺。我好像終於明白頭目說的，表演給人家看的意思。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-2-wrapper">
+          <div class="image-grid-2">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-15.jpg" alt="溪洲記事其三-4-15" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-16.jpg" alt="溪洲記事其三-4-16" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>午餐時刻，族人們端出一盤盤料理，讓部落女性在正中午的太陽下為來賓與觀眾打菜盛飯。先前聽族人說過，每一年準備的料理都會被Pairang（原意：漢人、平地人，唸做白浪）吃完，有時候族人自己都沒得吃，果不其然今年也是如此。我不確定這是否是部落的傳統之一，不過這個橋段的安排，確實已經看得到觀光化的成分在了。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-2-wrapper">
+          <div class="image-grid-2">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-17.jpg" alt="溪洲記事其三-4-17" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-18.jpg" alt="溪洲記事其三-4-18" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-19.jpg" alt="溪洲記事其三-4-19" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-20.jpg" alt="溪洲記事其三-4-20" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="split-50-wrapper">
+          <div class="split-image-left">
+            <img src="./images/work-15/work-15-4-21.jpg" alt="溪洲記事其三-4-21" onerror="this.parentNode.classList.add('image-placeholder')">
+          </div>
+          <div class="split-text-right">
+            <div class="story-text">
+              <p>那天我並沒有太多餘裕和族人聊天，只是感覺在眾人的目光還有鏡頭前，他們身上的族服和豐年祭比起傳統祭儀，更像是一種展演。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>我不太確定要把自己放在什麼位置說這些，畢竟我一開始也只是一個想來拍照的Pairang，吃部落的飯，用自己的鏡頭捕捉走一些部落。但是作為一個學攝影的人，我很清楚攝影不應該是掠奪，觀看永遠都涉及權力，有權力就會有支配與消費。當我聽到頭目在致辭中拜託在座的長官，贊助部落建造有屋頂的活動空間時，我就知道，我必須要讓這些照片的力量回饋給部落，讓更多人真心關注這裡，而不是做個報告蹭個飯，然後拍拍屁股走人。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-3-wrapper">
+          <div class="image-grid-3">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-22.jpg" alt="溪洲記事其三-4-22" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-23.jpg" alt="溪洲記事其三-4-23" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-24.jpg" alt="溪洲記事其三-4-24" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>晚上我們回到了文健站休息，同學採訪Nakaw上國中的女兒，他說了這麼一段話：很多人會嫌棄原住民的生活很亂很髒，但只要來到我們的部落，就是要照我們的傳統、我們的方式生活，不然就不要來。我看得出來她是一位很尊重自己的文化的族人。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="grid-3-wrapper">
+          <div class="image-grid-3">
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-25.jpg" alt="溪洲記事其三-4-25" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-26.jpg" alt="溪洲記事其三-4-26" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+            <div class="grid-image-item">
+              <img src="./images/work-15/work-15-4-27.jpg" alt="溪洲記事其三-4-27" onerror="this.parentNode.classList.add('image-placeholder')">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>午後雷陣雨襲擊，不知道這場雨沖走了多少只是來走馬看花的人。我們沒有去打擾大人們的交際便先行離開了，我一直覺得我還沒有好好說謝謝，還沒有好好回饋部落無私給我的一切。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="split-50-wrapper">
+          <div class="split-image-left">
+            <img src="./images/work-15/work-15-4-28.jpg" alt="溪洲記事其三-4-28" onerror="this.parentNode.classList.add('image-placeholder')">
+          </div>
+          <div class="split-text-right">
+            <div class="story-text">
+              <p>我在都市生活下的傲慢與急躁，在這三次拜訪部落後，已經緩和了下來。我還是會很常提醒自己，我所擁有的一切都不是理所當然；有時候慢一點、多用心一點，反而才能在生活中找到答案。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-text-container">
+          <div class="story-text">
+            <p>我覺得我以後也必須要常來這裡，把這裡的故事分享給更多人聽。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="full-width-image">
+          <img src="./images/work-15/work-15-4-29.jpg" alt="溪洲記事其三-4-29" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+    </article>
+
+    <footer class="project-footer-nav">
+      <span class="back-btn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">↑ Back to Top</span>
+      <div class="nav-link-next">
+      </div>
+    </footer>
+
+    <section class="recommend-section">
+      <h2 class="recommend-title">More Works</h2>
+      <div class="recommend-grid" id="recommend-grid">
+      </div>
+    </section>
+  </main>
+
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // 捲動淡入效果
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.story-block').forEach(el => observer.observe(el));
+
+    // 頁面轉場淡入
+    const overlay = document.getElementById('transition-overlay');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        if (overlay) overlay.classList.add('hidden');
+      }, 100);
+    });
+
+    window.addEventListener('pageshow', () => {
+      if (overlay) overlay.classList.add('hidden');
+    });
+
+    // 動態綁定轉場動畫至連結
+    function bindTransitionLinks() {
+      document.querySelectorAll('a[href]').forEach(anchor => {
+        const href = anchor.getAttribute('href');
+        const target = anchor.getAttribute('target');
+
+        if (href && !href.startsWith('#') && !href.startsWith('javascript:') && target !== '_blank') {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (overlay) {
+              overlay.classList.remove('hidden');
+              setTimeout(() => {
+                window.location.href = href;
+              }, 350);
+            } else {
+              window.location.href = href;
+            }
+          });
+        }
+      });
+    }
+
+    // 動態推薦專案（排除當前專題作品）
+    const CURRENT_WORK_ID = "work-15";
+
+    const allProjects = [
+      { id: "work-1", title: "老鐵舖的餘溫", date: "2025.04.14", url: "work-1.html", cover: "./images/work-1/work-1-16.jpg" },
+      { id: "work-2", title: "2025馬祖國際藝術島", date: "2025.11.07-10", url: "work-2.html", cover: "./images/work-2/work-2-29.jpg" },
+      { id: "work-3", title: "228・0紀念行動", date: "2026.02.27", url: "work-3.html", cover: "./images/work-3/work-3-7.jpg" },
+      { id: "work-4", title: "台北迎城隍系列", date: "2026.06.25、27", url: "work-4.html", cover: "./images/work-4/暗訪夜巡-1.jpg" },
+      { id: "work-5", title: "與大道公等雨", date: "2026.06.22", url: "work-5.html", cover: "./images/work-5/work-5.jpg" },
+      { id: "work-6", title: "浪漫屋", date: "2026.07.06", url: "work-6.html", cover: "./images/work-6/work-6-1.jpg" },
+      { id: "work-11", title: "發美皮鞋店", date: "2025.05.03", url: "work-11.html", cover: "./images/work-11/work-11-1.jpg" },
+      { id: "work-12", title: "台日友好 青森睡魔抵嘉", date: "2026.02.07 / 03.06", url: "work-12.html", cover: "./images/work-12/work-12-1.jpg" },
+      { id: "work-13", title: "鹿港國際龍舟錦標賽", date: "2026.06.19", url: "work-13.html", cover: "./images/work-13/work-13-1.jpg" },
+      { id: "work-14", title: "雞籠中元祭", date: "2026.06.19", url: "work-14.html", cover: "./images/work-14/work-14-1.jpg" },
+      { id: "work-15", title: "溪洲記事：溪洲部落豐年祭", date: "2026.07/08", url: "work-15-index.html", cover: "./images/work-15/work-15-4-29.jpg" },
+      { id: "work-16", title: "跟著《臺灣漫遊錄》吃遍台灣", date: "2026", url: "work-16-index.html", cover: "./images/work-16/work-16-1.jpg" },
+      { id: "work-17", title: "日進花影 活水營新竹篇", date: "2026.05.14", url: "work-17.html", cover: "./images/work-17/work-17-1.jpg" },
+      { id: "work-18", title: "青鳥運動", date: "2024.05", url: "work-18.html", cover: "./images/work-18/work-18-1.jpg" }
+    ];
+
+    function renderRecommendations() {
+      const otherProjects = allProjects.filter(p => p.id !== CURRENT_WORK_ID);
+      for (let i = otherProjects.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [otherProjects[i], otherProjects[j]] = [otherProjects[j], otherProjects[i]];
+      }
+
+      const selected = otherProjects.slice(0, 4);
+
+      const grid = document.getElementById('recommend-grid');
+      if (!grid) return;
+
+      grid.innerHTML = selected.map(p => `
+        <a href="${p.url}" class="recommend-card">
+          <div class="recommend-image">
+            <img src="${p.cover}" alt="${p.title}" onerror="this.parentNode.classList.add('image-placeholder')">
+          </div>
+          <div class="recommend-info">
+            <h3 class="recommend-info-title">${p.title}</h3>
+            <span class="recommend-info-date">${p.date}</span>
+          </div>
+        </a>
+      `).join('');
+
+      bindTransitionLinks();
+    }
+
+    renderRecommendations();
+
+    // Lightbox 功能
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('image-modal-img');
+    const modalClose = document.getElementById('image-modal-close');
+
+    document.querySelectorAll('.story-article img').forEach(img => {
+      img.addEventListener('click', () => {
+        if (img.src) {
+          modalImg.src = img.src;
+          modalImg.alt = img.alt || '';
+          modal.classList.add('active');
+        }
+      });
+    });
+
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    if (modal) modal.addEventListener('click', closeModal);
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

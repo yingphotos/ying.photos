@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>雞籠中元祭 — Ying Photos</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@p3ol/gen-yo-min-tc@1.0.0/index.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "GenYoMin TC", "GenYoMinTC-Regular", "Noto Serif TC", serif;
+      background: #f5f4f3;
+      color: #111111;
+      line-height: 1.8;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 全螢幕轉場白幕 */
+    .page-transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #f5f4f3;
+      z-index: 9999;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .page-transition-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 固定頁首導覽列 */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      mix-blend-mode: difference;
+      color: white;
+    }
+
+    nav .logo {
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    .back-btn {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      opacity: 0.6;
+    }
+
+    /* 專題 Header 區塊 */
+    .project-hero {
+      padding: 140px 32px 32px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .project-header {
+      margin-bottom: 0;
+    }
+
+    .project-title {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+
+    .project-date {
+      font-size: 14px;
+      color: #666;
+      font-family: Arial, sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+    /* 專題主文章容器 */
+    .story-article {
+      width: 100%;
+      padding: 0 0 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* 圖文敘事單元 */
+    .story-block {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 2s cubic-bezier(0.16, 1, 0.3, 1), transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .story-block.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 一般文字區塊容器 */
+    .intro-text-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 24px 32px 32px;
+      width: 100%;
+    }
+
+    /* 首段文字 + Shorts 影片兩欄排列容器 */
+    .intro-with-video-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 24px 32px 32px;
+      width: 100%;
+      display: flex;
+      gap: 36px;
+      align-items: flex-start;
+    }
+
+    /* Shorts 影片嵌入區域（直式 9:16 比例） */
+    .shorts-container {
+      flex: 0 0 315px;
+      width: 315px;
+      aspect-ratio: 9 / 16;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+
+    .shorts-container iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: none;
+    }
+
+    .story-text {
+      font-size: 18px;
+      line-height: 2;
+      color: #2c2c2c;
+      letter-spacing: 0.05em;
+      width: 100%;
+      text-align: justify;
+      flex: 1;
+    }
+
+    .story-text p {
+      margin-bottom: 20px;
+    }
+
+    .story-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* 單張大圖 (滿版、無縫) */
+    .story-image-single {
+      width: 100%;
+      background: #e8e8e8;
+      overflow: hidden;
+    }
+
+    .story-image-single img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* 雙圖並排容器 (無縫隙貼合) */
+    .story-image-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      width: 100%;
+    }
+
+    .story-image-grid-2 img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #e8e8e8;
+    }
+
+    /* 三張圖並排容器 */
+    .story-image-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      width: 100%;
+    }
+
+    .story-image-grid-3 img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #e8e8e8;
+    }
+
+    /* 占位符樣式 */
+    .image-placeholder {
+      position: relative;
+      min-height: 300px;
+    }
+
+    .image-placeholder::after {
+      content: "IMAGE MISSING";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #999;
+    }
+
+    /* 底部導覽按鈕區 */
+    .project-footer-nav {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 60px 32px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .nav-link-next {
+      text-align: right;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #888;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .nav-title {
+      font-size: 18px;
+      color: #111;
+      transition: opacity 0.3s ease;
+      line-height: 1.2;
+    }
+
+    .nav-title:hover {
+      opacity: 0.5;
+    }
+
+    /* 推薦區塊 (MORE WORKS) */
+    .recommend-section {
+      padding: 80px 32px 120px;
+      border-top: 1px solid #e0dfdd;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .recommend-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(32px, 4vw, 48px);
+      margin-bottom: 32px;
+      font-weight: 400;
+    }
+
+    .recommend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .recommend-card {
+      display: block;
+    }
+
+    .recommend-image {
+      width: 100%;
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      background: #e8e8e8;
+      margin-bottom: 16px;
+    }
+
+    .recommend-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .recommend-card:hover .recommend-image img {
+      transform: scale(1.05);
+    }
+
+    .recommend-info-title {
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+
+    .recommend-info-date {
+      font-size: 12px;
+      color: #777;
+    }
+
+    /* 圖片 Hover 微放大效果 */
+    .story-article img {
+      cursor: zoom-in;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .story-article img:hover {
+      transform: scale(1.01);
+    }
+
+    /* Lightbox Modal */
+    .image-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.88);
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: zoom-out;
+      padding: 40px;
+    }
+
+    .image-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .image-modal img {
+      max-width: 92vw;
+      max-height: 92vh;
+      object-fit: contain;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      transform: scale(0.96);
+    }
+
+    .image-modal.active img {
+      transform: scale(1);
+    }
+
+    .image-modal-close {
+      position: absolute;
+      top: 28px;
+      right: 32px;
+      font-size: 28px;
+      font-weight: 300;
+      color: #ffffff;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+      user-select: none;
+    }
+
+    .image-modal-close:hover {
+      opacity: 1;
+    }
+
+    /* RWD 手機版樣式 */
+    @media (max-width: 768px) {
+      nav, .project-hero, .intro-text-wrapper, .intro-with-video-wrapper, .project-footer-nav, .recommend-section {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .intro-with-video-wrapper {
+        flex-direction: column;
+        align-items: center; /* 關鍵：防止子元素被 flexbox 垂直拉伸扭曲 */
+        gap: 24px;
+      }
+
+      /* 關鍵：強制手機直式 9:16 比例 */
+      .shorts-container {
+        flex: initial;
+        width: 100%;
+        max-width: 360px;
+        aspect-ratio: 9 / 16 !important;
+        height: auto !important;
+      }
+
+      .project-hero {
+        padding-top: 110px;
+        padding-bottom: 20px;
+      }
+
+      .intro-text-wrapper {
+        padding-top: 20px;
+        padding-bottom: 24px;
+      }
+
+      .story-text {
+        font-size: 16px;
+        line-height: 1.95;
+      }
+
+      .story-image-grid-2, .story-image-grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .recommend-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-transition-overlay" id="transition-overlay"></div>
+
+  <div class="image-modal" id="image-modal">
+    <span class="image-modal-close" id="image-modal-close">✕</span>
+    <img src="" alt="" id="image-modal-img">
+  </div>
+
+  <nav>
+    <a href="index.html" class="logo">Ying</a>
+    <a href="works.html" class="back-btn">← Back to Works</a>
+  </nav>
+
+  <main>
+    <header class="project-hero">
+      <div class="project-header">
+        <h1 class="project-title">雞籠中元祭</h1>
+        <p class="project-date">2026.06.19</p>
+      </div>
+    </header>
+
+    <article class="story-article">
+
+      <section class="story-block">
+        <div class="intro-with-video-wrapper">
+          <div class="shorts-container">
+            <iframe 
+              src="https://www.youtube.com/embed/yydurvUbuKs" 
+              title="2026雞籠中元祭放水燈" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="story-text">
+            <p>雞籠中元祭起源於1855年，是全台歷史最久、規模最大的中元祭典，也是第一個國家指定的民俗類無形文化資產。</p>
+            <p>清代基隆的移民以漳、泉兩州為主，雙方為了爭奪土地與水源時常發生械鬥，造成嚴重的傷亡。為了平息紛爭，地方士紳協商由各姓氏宗親會為首，每年輪流出資舉辦中元祭祭拜孤魂，用祭典的規模來較勁。基隆的中元祭自從發展出以姓氏為首的特殊祭拜形式。地方甚至為了減少每年重新建造主普壇的資源消耗，在山上建造了鋼筋混凝土的主普壇。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-14/work-14-1.jpg" alt="雞籠中元祭-1" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-2.jpg" alt="雞籠中元祭-2" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-14/work-14-3.jpg" alt="雞籠中元祭-3" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-4.jpg" alt="雞籠中元祭-4" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="intro-text-wrapper">
+          <div class="story-text">
+            <p>而每年最受矚目的祭典儀式之一，就是放水燈遊行與施放水燈頭。中元節前一日下午，各姓氏宗親會將寫上自家姓氏的屋宇造型水燈放在花車上，結合燈飾、北管、舞龍舞獅與藝閣，在街道排成一列盛大的隊伍，展開盛大的遊行。這一天，基隆市區的主要街道被人潮擠得水洩不通，無論男女老少，都坐在街邊準備迎接這場盛典，當中也有不少前來觀賞的外國臉孔。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-single">
+          <img src="./images/work-14/work-14-5.jpg" alt="雞籠中元祭-5" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-14/work-14-6.jpg" alt="雞籠中元祭-6" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-7.jpg" alt="雞籠中元祭-7" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-14/work-14-8.jpg" alt="雞籠中元祭-8" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-9.jpg" alt="雞籠中元祭-9" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-14/work-14-10.jpg" alt="雞籠中元祭-10" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-11.jpg" alt="雞籠中元祭-11" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-14/work-14-12.jpg" alt="雞籠中元祭-12" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-13.jpg" alt="雞籠中元祭-13" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-14/work-14-14.jpg" alt="雞籠中元祭-14" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-15.jpg" alt="雞籠中元祭-15" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-single">
+          <img src="./images/work-14/work-14-16.jpg" alt="雞籠中元祭-16" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-single">
+          <img src="./images/work-14/work-14-17.jpg" alt="雞籠中元祭-17" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="intro-text-wrapper">
+          <div class="story-text">
+            <p>遊行結束後，車隊移往八斗子望海巷，海堤擠滿了觀賞的民眾，在法會的樂聲與香煙的繚繞下，彷彿人鬼兩界合而為一。各姓氏的水燈在岸邊排成一列，絢麗的燈光照亮了整條海岸線，洶湧的巨浪不時打上岸邊的水燈與人群。子時一到，煙火引燃放水燈儀式，眾人將點燃的水燈放入海中，邀請跨越黑水溝渡台的先民、以及清法戰爭中的孤魂一同上岸享受中元節的盛宴。相傳飄得最遠、火燒得最旺的水燈頭，該家族當年的運勢就會越興旺。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-14/work-14-18.jpg" alt="雞籠中元祭-18" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-19.jpg" alt="雞籠中元祭-19" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-14/work-14-20.jpg" alt="雞籠中元祭-20" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-21.jpg" alt="雞籠中元祭-21" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-14/work-14-22.jpg" alt="雞籠中元祭-22" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-23.jpg" alt="雞籠中元祭-23" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-grid-3">
+          <img src="./images/work-14/work-14-24.jpg" alt="雞籠中元祭-24" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-25.jpg" alt="雞籠中元祭-25" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-26.jpg" alt="雞籠中元祭-26" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-single">
+          <img src="./images/work-14/work-14-27.jpg" alt="雞籠中元祭-27" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-single">
+          <img src="./images/work-14/work-14-28.jpg" alt="雞籠中元祭-28" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-14/work-14-29.jpg" alt="雞籠中元祭-29" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-14/work-14-30.jpg" alt="雞籠中元祭-30" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <section class="story-block">
+        <div class="intro-text-wrapper">
+          <div class="story-text">
+            <p>基隆的中元祭起源於族群的衝突與融合，又在祭典中完整多元地容納了佛道儀式，展現了台灣文化兼容並蓄的精神。而在當今，這個傳承超過170年的民俗祭典，也將以多元的樣貌，帶著台灣走向國際的視野。</p>
+          </div>
+        </div>
+      </section>
+
+    </article>
+
+    <footer class="project-footer-nav">
+      <span class="back-btn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">↑ Back to Top</span>
+    </footer>
+
+    <section class="recommend-section">
+      <h2 class="recommend-title">More Works</h2>
+      <div class="recommend-grid" id="recommend-grid">
+      </div>
+    </section>
+  </main>
+
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // 捲動淡入效果
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.story-block').forEach(el => observer.observe(el));
+
+    // 頁面轉場淡入
+    const overlay = document.getElementById('transition-overlay');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        if (overlay) overlay.classList.add('hidden');
+      }, 100);
+    });
+
+    window.addEventListener('pageshow', () => {
+      if (overlay) overlay.classList.add('hidden');
+    });
+
+    // 動態綁定轉場動畫至連結
+    function bindTransitionLinks() {
+      document.querySelectorAll('a[href]').forEach(anchor => {
+        const href = anchor.getAttribute('href');
+        const target = anchor.getAttribute('target');
+
+        if (href && !href.startsWith('#') && !href.startsWith('javascript:') && target !== '_blank') {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (overlay) {
+              overlay.classList.remove('hidden');
+              setTimeout(() => {
+                window.location.href = href;
+              }, 350);
+            } else {
+              window.location.href = href;
+            }
+          });
+        }
+      });
+    }
+
+    // 動態推薦專案（排除當前頁面 work-14）
+    const CURRENT_WORK_ID = "work-14";
+
+    const allProjects = [
+      { id: "work-1", title: "老鐵舖的餘溫", date: "2025.04.14", url: "work-1.html", cover: "./images/work-1/work-1-16.jpg" },
+      { id: "work-2", title: "2025馬祖國際藝術島", date: "2025.11.07-10", url: "work-2.html", cover: "./images/work-2/work-2-29.jpg" },
+      { id: "work-3", title: "228・0紀念行動", date: "2026.02.27", url: "work-3.html", cover: "./images/work-3/work-3-7.jpg" },
+      { id: "work-4", title: "台北迎城隍系列", date: "2026.06.25、27", url: "work-4.html", cover: "./images/work-4/暗訪夜巡-1.jpg" },
+      { id: "work-5", title: "與大道公等雨", date: "2026.06.22", url: "work-5.html", cover: "./images/work-5/work-5.jpg" },
+      { id: "work-6", title: "浪漫屋", date: "2026.07.06", url: "work-6.html", cover: "./images/work-6/work-6-1.jpg" },
+      { id: "work-11", title: "發美皮鞋店", date: "2025.05.03", url: "work-11.html", cover: "./images/work-11/work-11-1.jpg" },
+      { id: "work-12", title: "台日友好 青森睡魔抵嘉", date: "2026.02.07 / 03.06", url: "work-12.html", cover: "./images/work-12/work-12-1.jpg" },
+      { id: "work-13", title: "鹿港國際龍舟錦標賽", date: "2026.06.19", url: "work-13.html", cover: "./images/work-13/work-13-1.jpg" },
+      { id: "work-14", title: "雞籠中元祭", date: "2026.06.19", url: "work-14.html", cover: "./images/work-14/work-14-1.jpg" },
+      { id: "work-15", title: "溪洲記事：溪洲部落豐年祭", date: "2026.07/08", url: "work-15-index.html", cover: "./images/work-15/work-15-4-29.jpg" },
+      { id: "work-16", title: "跟著《臺灣漫遊錄》吃遍台灣", date: "2026", url: "work-16-index.html", cover: "./images/work-16/work-16-1.jpg" },
+      { id: "work-17", title: "日進花影 活水營新竹篇", date: "2026.05.14", url: "work-17.html", cover: "./images/work-17/work-17-1.jpg" },
+      { id: "work-18", title: "青鳥運動", date: "2024.05", url: "work-18.html", cover: "./images/work-18/work-18-1.jpg" }
+    ];
+
+    function renderRecommendations() {
+      const otherProjects = allProjects.filter(p => p.id !== CURRENT_WORK_ID);
+      for (let i = otherProjects.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [otherProjects[i], otherProjects[j]] = [otherProjects[j], otherProjects[i]];
+      }
+
+      const selected = otherProjects.slice(0, 4);
+
+      const grid = document.getElementById('recommend-grid');
+      if (!grid) return;
+
+      grid.innerHTML = selected.map(p => `
+        <a href="${p.url}" class="recommend-card">
+          <div class="recommend-image">
+            <img src="${p.cover}" alt="${p.title}" onerror="this.parentNode.classList.add('image-placeholder')">
+          </div>
+          <div class="recommend-info">
+            <h3 class="recommend-info-title">${p.title}</h3>
+            <span class="recommend-info-date">${p.date}</span>
+          </div>
+        </a>
+      `).join('');
+
+      bindTransitionLinks();
+    }
+
+    renderRecommendations();
+
+    // Lightbox 功能
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('image-modal-img');
+    const modalClose = document.getElementById('image-modal-close');
+
+    document.querySelectorAll('.story-article img').forEach(img => {
+      img.addEventListener('click', () => {
+        if (img.src) {
+          modalImg.src = img.src;
+          modalImg.alt = img.alt || '';
+          modal.classList.add('active');
+        }
+      });
+    });
+
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    if (modal) modal.addEventListener('click', closeModal);
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

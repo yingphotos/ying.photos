@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>228・0紀念行動 — Ying Photos</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@p3ol/gen-yo-min-tc@1.0.0/index.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "GenYoMin TC", "GenYoMinTC-Regular", "Noto Serif TC", serif;
+      background: #f5f4f3;
+      color: #111111;
+      line-height: 1.8;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 全螢幕轉場白幕 */
+    .page-transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #f5f4f3;
+      z-index: 9999;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .page-transition-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 固定頁首導覽列 */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      mix-blend-mode: difference;
+      color: white;
+    }
+
+    nav .logo {
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    .back-btn {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      opacity: 0.6;
+    }
+
+    /* 專題 Header 區塊 */
+    .project-hero {
+      padding: 140px 32px 50px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .project-title {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+
+    .project-date {
+      font-size: 14px;
+      color: #666;
+      font-family: Arial, sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+    /* 滿版無縫相冊容器 */
+    .story-article {
+      width: 100%;
+      max-width: 100vw; /* 電腦端全螢幕滿版 */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0; /* 照片垂直無縫隙 */
+    }
+
+    .story-block {
+      width: 100%;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .story-block.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 通用圖片設定：維持原圖比例不裁切 */
+    .story-article img {
+      width: 100%;
+      height: auto; /* 保持原圖比例 */
+      display: block;
+      background: #e8e8e8;
+      cursor: zoom-in;
+      transition: opacity 0.3s ease;
+    }
+
+    .story-article img:hover {
+      opacity: 0.92;
+    }
+
+    /* 1 欄滿版 (單張橫圖) */
+    .story-image-single {
+      width: 100%;
+    }
+
+    /* 2 欄滿版 (雙圖並排) */
+    .story-image-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0; /* 0 縫隙 */
+      width: 100%;
+    }
+
+    /* 3 欄滿版 (三圖並排) */
+    .story-image-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0; /* 0 縫隙 */
+      width: 100%;
+    }
+
+    /* 占位符樣式 */
+    .image-placeholder {
+      position: relative;
+      min-height: 250px;
+    }
+
+    .image-placeholder::after {
+      content: "IMAGE MISSING";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #999;
+    }
+
+    /* 底部導覽按鈕區 */
+    .project-footer-nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 32px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .nav-link-next {
+      text-align: right;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #888;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .nav-title {
+      font-size: 18px;
+      color: #111;
+      transition: opacity 0.3s ease;
+      line-height: 1.2;
+    }
+
+    .nav-title:hover {
+      opacity: 0.5;
+    }
+
+    /* 頁尾分隔線 */
+    .footer-divider {
+      max-width: 1136px;
+      margin: 0 auto 24px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    /* 推薦專案區塊 */
+    .more-projects-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px 120px;
+    }
+
+    .more-projects-title {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #888;
+      margin-top: 0;
+      margin-bottom: 24px;
+      font-weight: 400;
+    }
+
+    .recommendations-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      width: 100%;
+    }
+
+    .recommend-card {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: #e0e0e0;
+    }
+
+    .recommend-card .recommend-image {
+      width: 100%;
+      height: 100%;
+    }
+
+    .recommend-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .recommend-info {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.25);
+      transition: background 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 32px;
+      color: #ffffff;
+      box-sizing: border-box;
+    }
+
+    .recommend-info-title {
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+      transform: translateY(0);
+      transition: transform 0.4s ease;
+    }
+
+    .recommend-info-date {
+      font-size: 12px;
+      opacity: 0.8;
+      font-family: Arial, sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+    .recommend-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .recommend-card:hover .recommend-info {
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    .recommend-card:hover .recommend-info-title {
+      transform: translateY(-4px);
+    }
+
+    /* Lightbox Modal */
+    .image-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.88);
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: zoom-out;
+      padding: 40px;
+    }
+
+    .image-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .image-modal img {
+      max-width: 92vw;
+      max-height: 92vh;
+      object-fit: contain;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      transform: scale(0.96);
+    }
+
+    .image-modal.active img {
+      transform: scale(1);
+    }
+
+    .image-modal-close {
+      position: absolute;
+      top: 28px;
+      right: 32px;
+      font-size: 28px;
+      font-weight: 300;
+      color: #ffffff;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+      user-select: none;
+    }
+
+    .image-modal-close:hover {
+      opacity: 1;
+    }
+
+    /* 手機版適應 (RWD) */
+    @media (max-width: 768px) {
+      nav, .project-hero, .project-footer-nav, .more-projects-section {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .footer-divider {
+        max-width: calc(100% - 40px);
+      }
+
+      .project-hero {
+        padding-top: 110px;
+        padding-bottom: 24px;
+      }
+
+      .story-image-grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .story-image-grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .recommendations-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-transition-overlay" id="transition-overlay"></div>
+
+  <div class="image-modal" id="image-modal">
+    <span class="image-modal-close" id="image-modal-close">✕</span>
+    <img src="" alt="" id="image-modal-img">
+  </div>
+
+  <nav>
+    <a href="index.html" class="logo">Ying</a>
+    <a href="works.html" class="back-btn">← Back to Works</a>
+  </nav>
+
+  <main>
+    <header class="project-hero">
+      <div class="project-header">
+        <h1 class="project-title">228・0紀念行動</h1>
+        <p class="project-date">2026.02.27</p>
+      </div>
+    </header>
+
+    <article class="story-article">
+
+      <!-- 1/21: 單圖滿版 -->
+      <section class="story-block">
+        <div class="story-image-single">
+          <img src="./images/work-3/work-3-1.jpg" alt="228・0紀念行動 work-3-1" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 2/21, 3/21: 雙圖並排 -->
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-3/work-3-2.jpg" alt="228・0紀念行動 work-3-2" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-3/work-3-3.jpg" alt="228・0紀念行動 work-3-3" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 4/21: 單圖滿版 -->
+      <section class="story-block">
+        <div class="story-image-single">
+          <img src="./images/work-3/work-3-4.jpg" alt="228・0紀念行動 work-3-4" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 5/21, 6/21: 雙圖並排 -->
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-3/work-3-5.jpg" alt="228・0紀念行動 work-3-5" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-3/work-3-6.jpg" alt="228・0紀念行動 work-3-6" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 7/21: 單圖滿版 -->
+      <section class="story-block">
+        <div class="story-image-single">
+          <img src="./images/work-3/work-3-7.jpg" alt="228・0紀念行動 work-3-7" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 8/21, 9/21: 雙圖並排 -->
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-3/work-3-8.jpg" alt="228・0紀念行動 work-3-8" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-3/work-3-9.jpg" alt="228・0紀念行動 work-3-9" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 10/21: 單圖滿版 -->
+      <section class="story-block">
+        <div class="story-image-single">
+          <img src="./images/work-3/work-3-10.jpg" alt="228・0紀念行動 work-3-10" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 11/21, 12/21: 雙圖並排 -->
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-3/work-3-11.jpg" alt="228・0紀念行動 work-3-11" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-3/work-3-12.jpg" alt="228・0紀念行動 work-3-12" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 13/21: 單圖滿版 -->
+      <section class="story-block">
+        <div class="story-image-single">
+          <img src="./images/work-3/work-3-13.jpg" alt="228・0紀念行動 work-3-13" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 14/21, 15/21: 雙圖並排 -->
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-3/work-3-14.jpg" alt="228・0紀念行動 work-3-14" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-3/work-3-15.jpg" alt="228・0紀念行動 work-3-15" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 16/21: 單圖滿版 -->
+      <section class="story-block">
+        <div class="story-image-single">
+          <img src="./images/work-3/work-3-16.jpg" alt="228・0紀念行動 work-3-16" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 17/21, 18/21: 雙圖並排 -->
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-3/work-3-17.jpg" alt="228・0紀念行動 work-3-17" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-3/work-3-18.jpg" alt="228・0紀念行動 work-3-18" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 19/21: 單圖滿版 -->
+      <section class="story-block">
+        <div class="story-image-single">
+          <img src="./images/work-3/work-3-19.jpg" alt="228・0紀念行動 work-3-19" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+      <!-- 20/21, 21/21: 雙圖並排 -->
+      <section class="story-block">
+        <div class="story-image-grid-2">
+          <img src="./images/work-3/work-3-20.jpg" alt="228・0紀念行動 work-3-20" onerror="this.classList.add('image-placeholder')">
+          <img src="./images/work-3/work-3-21.jpg" alt="228・0紀念行動 work-3-21" onerror="this.classList.add('image-placeholder')">
+        </div>
+      </section>
+
+    </article>
+
+    <footer class="project-footer-nav">
+      <span class="back-btn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">↑ Back to Top</span>
+    </footer>
+
+    <div class="footer-divider"></div>
+
+    <section class="more-projects-section">
+      <h3 class="more-projects-title">More Works</h3>
+      <div class="recommendations-grid" id="recommend-grid"></div>
+    </section>
+  </main>
+
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.story-block').forEach(el => observer.observe(el));
+
+    const overlay = document.getElementById('transition-overlay');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        if (overlay) overlay.classList.add('hidden');
+      }, 100);
+    });
+
+    window.addEventListener('pageshow', () => {
+      if (overlay) overlay.classList.add('hidden');
+    });
+
+    function bindTransitionLinks() {
+      document.querySelectorAll('a[href]').forEach(anchor => {
+        const href = anchor.getAttribute('href');
+        const target = anchor.getAttribute('target');
+
+        if (href && !href.startsWith('#') && !href.startsWith('javascript:') && target !== '_blank') {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (overlay) {
+              overlay.classList.remove('hidden');
+              setTimeout(() => {
+                window.location.href = href;
+              }, 350);
+            } else {
+              window.location.href = href;
+            }
+          });
+        }
+      });
+    }
+
+    // ----------------------------------------------------
+    // 動態推薦專案（排除當前頁面，隨機抽最多 4 個）
+    // ----------------------------------------------------
+    const CURRENT_WORK_ID = "work-3";
+
+    // 未來新增專題時，直接在此陣列加入物件即可：
+    const allProjects = [
+      { id: "work-1", title: "老鐵舖的餘溫", date: "2025.04.14", url: "work-1.html", cover: "./images/work-1/work-1-16.jpg" },
+      { id: "work-2", title: "2025馬祖國際藝術島", date: "2025.11.07-10", url: "work-2.html", cover: "./images/work-2/work-2-29.jpg" },
+      { id: "work-3", title: "228・0紀念行動", date: "2026.02.27", url: "work-3.html", cover: "./images/work-3/work-3-7.jpg" },
+      { id: "work-4", title: "台北迎城隍系列", date: "2026.06.25、27", url: "work-4.html", cover: "./images/work-4/暗訪夜巡-1.jpg" },
+      { id: "work-5", title: "與大道公等雨", date: "2026.06.22", url: "work-5.html", cover: "./images/work-5/work-5.jpg" },
+      { id: "work-6", title: "浪漫屋", date: "2026.07.06", url: "work-6.html", cover: "./images/work-6/work-6-1.jpg" },
+      { id: "work-11", title: "發美皮鞋店", date: "2025.05.03", url: "work-11.html", cover: "./images/work-11/work-11-1.jpg" },
+      { id: "work-12", title: "台日友好 青森睡魔抵嘉", date: "2026.02.07 / 03.06", url: "work-12.html", cover: "./images/work-12/work-12-1.jpg" },
+      { id: "work-13", title: "鹿港國際龍舟錦標賽", date: "2026.06.19", url: "work-13.html", cover: "./images/work-13/work-13-1.jpg" },
+      { id: "work-14", title: "雞籠中元祭", date: "2026.06.19", url: "work-14.html", cover: "./images/work-14/work-14-1.jpg" },
+      { id: "work-15", title: "溪洲記事：溪洲部落豐年祭", date: "2026.07/08", url: "work-15-index.html", cover: "./images/work-15/work-15-4-29.jpg" },
+      { id: "work-16", title: "跟著《臺灣漫遊錄》吃遍台灣", date: "2026", url: "work-16-index.html", cover: "./images/work-16/work-16-1.jpg" },
+      { id: "work-17", title: "日進花影 活水營新竹篇", date: "2026.05.14", url: "work-17.html", cover: "./images/work-17/work-17-1.jpg" },
+      { id: "work-18", title: "青鳥運動", date: "2024.05", url: "work-18.html", cover: "./images/work-18/work-18-1.jpg" }
+    ];
+
+    function renderRecommendations() {
+      // 1. 過濾掉當前頁面作品
+      const otherProjects = allProjects.filter(p => p.id !== CURRENT_WORK_ID);
+
+      // 2. 隨機洗牌演算法
+      for (let i = otherProjects.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [otherProjects[i], otherProjects[j]] = [otherProjects[j], otherProjects[i]];
+      }
+
+      // 3. 取出前 4 個作品
+      const selected = otherProjects.slice(0, 4);
+
+      const grid = document.getElementById('recommend-grid');
+      if (!grid) return;
+
+      // 4. 渲染卡片
+      grid.innerHTML = selected.map(p => `
+        <a href="${p.url}" class="recommend-card">
+          <div class="recommend-image">
+            <img src="${p.cover}" alt="${p.title}" onerror="this.parentNode.classList.add('image-placeholder')">
+          </div>
+          <div class="recommend-info">
+            <h3 class="recommend-info-title">${p.title}</h3>
+            <span class="recommend-info-date">${p.date}</span>
+          </div>
+        </a>
+      `).join('');
+
+      bindTransitionLinks();
+    }
+
+    renderRecommendations();
+
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('image-modal-img');
+    const modalClose = document.getElementById('image-modal-close');
+
+    document.querySelectorAll('.story-article img').forEach(img => {
+      img.addEventListener('click', () => {
+        if (img.src) {
+          modalImg.src = img.src;
+          modalImg.alt = img.alt || '';
+          modal.classList.add('active');
+        }
+      });
+    });
+
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    if (modal) modal.addEventListener('click', closeModal);
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

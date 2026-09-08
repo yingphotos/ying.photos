@@ -1,45 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
-  <link rel="stylesheet" href="https://unpkg.com/@free-fonts/genyo-mincho@1.0.1/genyo-mincho.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Ying — Photography & Visual Works</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@p3ol/gen-yo-min-tc@1.0.0/index.css">
+
   <style>
+    html {
+      scroll-behavior: auto !important;
+    }
+    /* =========================
+       1. 基礎設定與全域字型 (修正手機 Safari 相容性)
+    ========================= */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-body {
-  font-family: Arial, "GenYoMin2TC", serif;
-      background: #ffffff;
+
+    html, body {
+      scroll-behavior: auto !important;
+    }
+
+    body {
+      /* 設定字型族系：優先套用源樣明體，若手機阻擋 CDN 則無縫接軌至思源明體，確保 100% 呈現明體風格 */
+      font-family: "GenYoMin TC", "GenYoMinTC-Regular", "GenYoMinTC", "Noto Serif TC", serif;
+      font-weight: 400;
+      background: #f5f4f3;
       color: #111111;
       line-height: 1.4;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased; /* 優化 iOS Safari 字型鋸齒 */
+      -moz-osx-font-smoothing: grayscale;
     }
 
     a {
       color: inherit;
       text-decoration: none;
     }
-.statement {
-  margin-top: 20px;
-  font-family: "GenYoMin4TC", serif;
-  font-size: clamp(10px, 3vw, 42px);
-  line-height: 1.6;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
 
-@media (max-width: 700px) {
-  .statement {
-    white-space: normal;
-  }
-}
+    section {
+      padding: 40px 32px;
+    }
 
-    /* Navigation */
+    /* =========================
+       2. 英文標題覆蓋 (不使用 !important 避免繼承鏈中斷)
+    ========================= */
+    .section-title,
+    .hero-title,
+    .instagram-content h2,
+    .footer-logo {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 400;
+    }
+
+    /* 區段標題 */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-top: 0;
+      margin-bottom: -0.25em;
+      position: relative;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .section-title {
+      font-size: clamp(60px, 10vw, 120px);
+      letter-spacing: -0.04em;
+      line-height: 0.85;
+      color: #303030;
+      text-transform: none;
+    }
+
+    .section-number {
+      display: none !important;
+    }
+
+    .image-placeholder {
+      width: 100%;
+      background: #e8e8e8;
+      position: relative;
+    }
+
+    .image-placeholder::after {
+      content: "IMAGE";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: #888888;
+    }
+
+    /* =========================
+       全螢幕跳轉白幕
+    ========================= */
+    .page-transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #f5f4f3;
+      z-index: 9999;
+      opacity: 1; /* 預設遮蓋全螢幕 */
+      pointer-events: auto;
+      transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .page-transition-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* =========================
+       頁首導覽列
+    ========================= */
     nav {
       position: fixed;
       top: 0;
@@ -66,383 +152,925 @@ body {
       text-transform: uppercase;
     }
 
-    /* Hero */
+    /* =========================
+       Hero Section
+    ========================= */
     .hero {
-      min-height: 100vh;
-      padding: 120px 32px 60px;
+      padding: 100px 0 40px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero-header {
+      width: 100%;
+      text-align: center;
+      margin-bottom: -0.22em;
+      position: relative;
+      z-index: 10;
+      pointer-events: none;
     }
 
     .hero-title {
-      font-size: clamp(64px, 12vw, 180px);
-      font-weight: 400;
-      letter-spacing: -0.06em;
+      font-size: clamp(84px, 15vw, 220px);
+      letter-spacing: -0.04em;
       line-height: 0.85;
+      color: #111111;
+      display: inline-block;
     }
 
-    .hero-subtitle {
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-top: 24px;
+    .hero-carousel-container {
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      height: 100vh;
+      min-height: 500px;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+      background-color: #d1d0ce;
     }
 
-    /* Image Placeholder */
-    .image-placeholder {
+    .hero-carousel {
+      position: relative;
       width: 100%;
+      height: 100%;
+    }
+
+    .carousel-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transform: scale(1) translateZ(0);
+      transition: transform 5.5s linear;
+    }
+
+    .carousel-slide.active {
+      opacity: 1;
+    }
+
+    .carousel-slide.zoom img {
+      transform: scale(1.1) translateZ(0);
+    }
+
+    .statement {
+      margin-top: 70px;
+      padding: 0 32px;
+      font-size: clamp(16px, 2.5vw, 28px);
+      line-height: 1.6;
+      letter-spacing: 0.04em;
+      color: #3b3b3b;
+      text-align: center;
+    }
+
+    /* =========================
+       滾動淡入效果
+    ========================= */
+    .fade-in-section {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 4s cubic-bezier(0.16, 1, 0.3, 1), transform 4s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .fade-in-section.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =========================
+       About 區塊
+    ========================= */
+    .about-section {
+      padding: 60px 32px 40px;
+    }
+
+    .about-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: stretch;
+    }
+
+    .about-gallery-grid {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
       background: #e8e8e8;
+      cursor: default;
+    }
+
+    .grid-photo {
+      width: 100%;
+      height: 33.333%;
+      aspect-ratio: 3 / 1;
+      overflow: hidden;
       position: relative;
     }
 
-    .image-placeholder::after {
-      content: "IMAGE";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      color: #888888;
+    .grid-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: none !important;
+      transform: none !important;
     }
 
-    .hero-image {
-      height: 65vh;
-      margin-top: 80px;
+    .grid-photo:hover img {
+      transform: none !important;
+      opacity: 1 !important;
     }
 
-    /* Sections */
-    section {
-      padding: 140px 32px;
-    }
+    .grid-photo:nth-child(1) img { object-position: 50% 10%; }
+    .grid-photo:nth-child(2) img { object-position: 50% 60%; }
+    .grid-photo:nth-child(3) img { object-position: 50% 90%; }
 
-    .section-header {
+    .about-content {
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
-      align-items: baseline;
-      border-top: 1px solid #111111;
-      padding-top: 12px;
-      margin-bottom: 70px;
+      height: 100%;
+      padding: 8px 0;
     }
 
-    .section-title {
-      font-size: 13px;
+    .horizontal-text {
+      margin-top: auto;
+      margin-bottom: auto;
+      margin-left: 0;
+      margin-right: auto;
+      text-align: left;
+      font-size: clamp(16px, 1.35vw, 20px);
+      line-height: 2.2;
       letter-spacing: 0.08em;
+      color: #222222;
+    }
+
+    .horizontal-text p {
+      margin-bottom: 8px;
+    }
+
+    .about-more-wrapper {
+      align-self: flex-end;
+    }
+
+    .about-more-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
+      color: #111111;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #111111;
+      transition: all 0.3s ease;
     }
 
-    .section-number {
-      font-size: 11px;
-      color: #666666;
+    .about-more-btn .btn-arrow {
+      transition: transform 0.3s ease;
     }
 
-    /* Selected Works */
-    .works-grid {
+    .about-more-btn:hover {
+      opacity: 0.5;
+    }
+
+    .about-more-btn:hover .btn-arrow {
+      transform: translateX(6px);
+    }
+
+    /* =========================
+       Selected Works (主題 2x2 網格 & 流動牆)
+    ========================= */
+    #works {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    #works .section-header {
+      padding: 0 32px;
+    }
+
+    .works-grid-2x2 {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
+      gap: 0;
+      width: 100%;
+      margin-top: 32px;
     }
 
-    .work {
+    .featured-story {
+      position: relative;
       display: block;
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      background: #e8e8e8;
     }
 
-    .work-image {
-      aspect-ratio: 4 / 3;
+    .story-image {
+      width: 100%;
+      height: 100%;
+    }
+
+    .story-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .featured-story:hover .story-image img {
+      transform: scale(1.06);
+    }
+
+    .story-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 65%);
+      display: flex;
+      align-items: flex-end;
+      padding: 32px;
+      opacity: 0.85;
       transition: opacity 0.4s ease;
     }
 
-    .work:hover .work-image {
-      opacity: 0.7;
+    .featured-story:hover .story-overlay {
+      opacity: 1;
+    }
+
+    .story-info {
+      color: #ffffff;
     }
 
     .work-info {
       display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
-      font-size: 11px;
-      letter-spacing: 0.04em;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    /* Series */
-    .series-list {
-      border-top: 1px solid #111111;
+    .work-title {
+      font-size: clamp(20px, 2.2vw, 28px);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      line-height: 1.3;
+      color: #ffffff;
     }
 
-    .series-item {
+    .work-date {
+      font-size: clamp(12px, 1.1vw, 14px);
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.8);
+      font-family: Arial, sans-serif;
+    }
+
+    .works-bottom-layout {
       display: flex;
+      align-items: flex-end;
+      width: 100%;
+      margin-top: 16px;
+    }
+
+    .marquee-container {
+      width: 66.666%;
+      overflow: hidden;
+      position: relative;
+      padding: 4px 0;
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 10px;
+      width: max-content;
+      animation: marqueeScroll 55s linear infinite; /* 時間由 60s 調整為 25s，加快速度 */
+    }
+
+    .marquee-track:hover {
+      animation-play-state: paused;
+    }
+
+    .marquee-item {
+      width: clamp(380px, 42vw, 680px);
+      aspect-ratio: 3 / 2;
+      flex-shrink: 0;
+      background: #e8e8e8;
+      overflow: hidden;
+    }
+
+    .marquee-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    @keyframes marqueeScroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .works-more-wrapper {
+      width: 33.333%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      padding: 0 32px 8px;
+    }
+
+    @media (max-width: 768px) {
+      .works-grid-2x2 {
+        grid-template-columns: 1fr;
+      }
+      .featured-story {
+        aspect-ratio: 3 / 2;
+      }
+      .story-overlay {
+        padding: 20px;
+      }
+      .works-bottom-layout {
+        flex-direction: column;
+        margin-top: 12px;
+      }
+      .marquee-container {
+        width: 100%;
+      }
+      .works-more-wrapper {
+        width: 100%;
+        padding: 24px 20px 0;
+      }
+    }
+
+    /* =========================
+       Instagram 區塊
+    ========================= */
+    .instagram-section {
+      padding: 0 32px 40px;
+    }
+
+    .instagram-link {
+      position: relative;
+      display: block;
+      height: 65vh;
+      min-height: 400px;
+      overflow: hidden;
+    }
+
+    .instagram-image {
+      width: 100%;
+      height: 100%;
+      background: #e8e8e8;
+      position: relative;
+    }
+
+    .instagram-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .instagram-link:hover .instagram-image img {
+      transform: scale(1.03);
+    }
+
+    .instagram-content {
+      position: absolute;
+      left: 40px;
+      bottom: 40px;
+      color: #ffffff;
+      z-index: 2;
+    }
+
+    .instagram-content p {
+      margin-bottom: 8px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+    }
+
+    .instagram-content h2 {
+      font-size: clamp(36px, 7vw, 110px);
+      letter-spacing: -0.05em;
+    }
+
+    /* =========================
+       Footer (頁尾)
+    ========================= */
+    .site-footer {
+      padding: 40px 32px 30px;
+    }
+
+    .footer-top {
+      display: flex;
+      flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 0;
-      border-bottom: 1px solid #cccccc;
-      font-size: 18px;
-      transition: padding 0.3s ease;
-    }
-
-    .series-item:hover {
-      padding-left: 12px;
-    }
-
-    .series-year {
-      font-size: 11px;
-      color: #666666;
-    }
-
-    /* About */
-    .about {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
       gap: 40px;
+      padding-bottom: 40px;
     }
 
-    .about-text {
-      font-size: clamp(28px, 4vw, 54px);
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-    }
-
-    /* Contact */
-    .contact {
-      min-height: 70vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .contact-title {
+    .footer-logo {
       font-size: clamp(60px, 12vw, 180px);
-      font-weight: 400;
-      letter-spacing: -0.06em;
-      line-height: 0.85;
+      letter-spacing: -0.07em;
+      line-height: 0.8;
     }
 
-    .contact-links {
+    .footer-menu {
       display: flex;
-      gap: 30px;
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
+      flex-wrap: wrap;
     }
 
-    /* Footer */
-    footer {
-      padding: 24px 32px;
+    .footer-menu a:hover,
+    .footer-instagram:hover {
+      opacity: 0.5;
+    }
+
+    .footer-bottom {
       border-top: 1px solid #111111;
+      padding-top: 20px;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       font-size: 10px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    /* Mobile */
-    @media (max-width: 700px) {
-
-      nav {
-        padding: 18px 20px;
+    /* =========================
+       響應式設定 (RWD)
+    ========================= */
+    @media (max-width: 900px) {
+      nav, section, .instagram-section, .site-footer {
+        padding-left: 20px;
+        padding-right: 20px;
       }
 
       nav .menu {
         gap: 12px;
+        font-size: 11px;
       }
 
-      .hero {
-        padding: 100px 20px 40px;
+      .hero-carousel-container {
+        width: 100%;
+        margin-left: 0;
+        height: 70vh;
+        min-height: 400px;
       }
 
-      .hero-image {
-        height: 55vh;
-      }
-
-      section {
-        padding: 100px 20px;
-      }
-
-      .works-grid {
+      .about-container {
         grid-template-columns: 1fr;
         gap: 40px;
       }
 
-      .about {
-        grid-template-columns: 1fr;
-        gap: 30px;
+      .about-gallery-grid {
+        aspect-ratio: auto;
+        width: 100%;
       }
 
-      .series-item {
-        font-size: 16px;
+      .grid-photo {
+        height: auto;
+        aspect-ratio: 3 / 1;
       }
 
-      footer {
-        padding: 20px;
+      .about-content {
+        justify-content: start;
+        gap: 32px;
+        padding: 0;
+      }
+
+      .horizontal-text {
+        margin: 0;
+        width: 100%;
+        font-size: 15px;
+        line-height: 2.0;
+      }
+
+      .about-more-wrapper {
+        margin-top: 10px;
+      }
+
+      .instagram-content {
+        left: 20px;
+        bottom: 20px;
       }
     }
   </style>
 </head>
 
-<body>
-  <!-- Navigation -->
-  <nav>
-    <a href="#" class="logo">Ying</a>
+<body id="top">
 
+  <div class="page-transition-overlay" id="transition-overlay"></div>
+
+  <nav>
+    <a href="#top" class="logo">Ying</a>
     <div class="menu">
-      <a href="#works">Works</a>
-      <a href="#series">Series</a>
+      <a href="#top">Top</a>
       <a href="#about">About</a>
-      <a href="#contact">Contact</a>
+      <a href="#works">Works</a>
+      <a href="#instagram-section">Contact</a>
     </div>
   </nav>
 
-
-  <!-- Hero -->
   <header class="hero">
-
-    <div>
-      <h1 class="hero-title">Ying</h1>
-
-      <p class="hero-subtitle">
-        Photography & Visual Works
-      </p>
+    <div class="hero-header">
+      <h1 class="hero-title">Ying Photos</h1>
     </div>
 
-    <div class="image-placeholder hero-image"></div>
-    
-    <div class="statement">
+    <div class="hero-carousel-container">
+      <div class="hero-carousel">
+        <div class="carousel-slide slide-1">
+          <img src="./images/hero/hero-1.jpg" alt="" onerror="this.style.display='none'">
+        </div>
+        <div class="carousel-slide slide-2">
+          <img src="./images/hero/hero-2.jpg" alt="" onerror="this.style.display='none'">
+        </div>
+        <div class="carousel-slide slide-3">
+          <img src="./images/hero/hero-3.jpg" alt="" onerror="this.style.display='none'">
+        </div>
+        <div class="carousel-slide slide-4">
+          <img src="./images/hero/hero-4.jpg" alt="" onerror="this.style.display='none'">
+        </div>
+      </div>
+    </div>
+
+    <div class="statement fade-in-section">
       用影像紀錄文化，用攝影讓世界看見台灣。
     </div>
-
   </header>
 
-
-  <!-- Selected Works -->
-  <section id="works">
-
-    <div class="section-header">
-      <h2 class="section-title">Selected Works</h2>
-      <span class="section-number">01</span>
-    </div>
-
-    <div class="works-grid">
-
-      <a href="#" class="work">
-        <div class="image-placeholder work-image"></div>
-
-        <div class="work-info">
-          <span>Untitled 01</span>
-          <span>2026</span>
-        </div>
-      </a>
-
-      <a href="#" class="work">
-        <div class="image-placeholder work-image"></div>
-
-        <div class="work-info">
-          <span>Untitled 02</span>
-          <span>2026</span>
-        </div>
-      </a>
-
-      <a href="#" class="work">
-        <div class="image-placeholder work-image"></div>
-
-        <div class="work-info">
-          <span>Untitled 03</span>
-          <span>2026</span>
-        </div>
-      </a>
-
-      <a href="#" class="work">
-        <div class="image-placeholder work-image"></div>
-
-        <div class="work-info">
-          <span>Untitled 04</span>
-          <span>2026</span>
-        </div>
-      </a>
-
-    </div>
-
-  </section>
-
-
-  <!-- Series -->
-  <section id="series">
-
-    <div class="section-header">
-      <h2 class="section-title">Series</h2>
-      <span class="section-number">02</span>
-    </div>
-
-    <div class="series-list">
-
-      <a href="#" class="series-item">
-        <span>Series 01 — Untitled</span>
-        <span class="series-year">2026</span>
-      </a>
-
-      <a href="#" class="series-item">
-        <span>Series 02 — Untitled</span>
-        <span class="series-year">2026</span>
-      </a>
-
-      <a href="#" class="series-item">
-        <span>Series 03 — Untitled</span>
-        <span class="series-year">2025</span>
-      </a>
-
-    </div>
-
-  </section>
-
-
-  <!-- About -->
-  <section id="about">
-
+  <section id="about" class="about-section fade-in-section">
     <div class="section-header">
       <h2 class="section-title">About</h2>
-      <span class="section-number">03</span>
     </div>
 
-    <div class="about">
-
-      <div>
-        <p>Ying</p>
-        <p>Taiwan</p>
+    <div class="about-container">
+      <div class="about-gallery-grid">
+        <div class="grid-photo">
+          <img src="./images/about/about-1.jpg" alt="About Photo 1" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+        <div class="grid-photo">
+          <img src="./images/about/about-2.jpg" alt="About Photo 2" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+        <div class="grid-photo">
+          <img src="./images/about/about-3.jpg" alt="About Photo 3" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
       </div>
 
-      <p class="about-text">
-        Photography and visual works exploring
-        everyday life, people, places and moments.
-      </p>
+      <div class="about-content">
+        <div class="horizontal-text">
+          <p>熱愛攝影與台灣文化的大學生。</p>
+          <p>拍日常也拍活動紀錄，</p>
+          <p>拍繞境也拍社會運動。</p>
+          <p>善於奔跑與流汗，</p>
+          <p>習慣蹲下或退後一步看世界。</p>
+        </div>
 
+        <div class="about-more-wrapper">
+          <a href="about.html" class="about-more-btn">
+            <span>MORE</span>
+            <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
     </div>
-
   </section>
 
-
-  <!-- Contact -->
-  <section id="contact" class="contact">
-
+  <section id="works" class="fade-in-section">
     <div class="section-header">
-      <h2 class="section-title">Contact</h2>
-      <span class="section-number">04</span>
+      <h2 class="section-title">Selected Works</h2>
     </div>
 
-    <h2 class="contact-title">Let's talk.</h2>
+    <div class="works-grid-2x2">
+      <!-- 4. 溪洲記事：溪洲部落豐年祭 (work-15) -->
+      <a href="work-15-index.html" class="featured-story">
+        <div class="story-image">
+          <img src="./images/work-15/work-15-4-29.jpg" alt="溪洲記事：溪洲部落豐年祭" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+        <div class="story-overlay">
+          <div class="story-info work-info">
+            <h3 class="work-title">溪洲記事：溪洲部落豐年祭</h3>
+            <span class="work-date">2026.07/08</span>
+          </div>
+        </div>
+      </a>
 
-    <div class="contact-links">
-      <a href="#">Instagram</a>
-      <a href="#">Email</a>
+      <!-- 2. 台北迎城隍系列 (work-4) -->
+      <a href="work-4.html" class="featured-story">
+        <div class="story-image">
+          <img src="./images/work-4/暗訪夜巡-1.jpg" alt="台北迎城隍系列" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+        <div class="story-overlay">
+          <div class="story-info work-info">
+            <h3 class="work-title">台北迎城隍系列</h3>
+            <span class="work-date">2026.06.25、27</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 3. 跟著臺灣漫遊錄吃遍台灣 (work-16) -->
+      <a href="work-16-index.html" class="featured-story">
+        <div class="story-image">
+          <img src="./images/work-16/work-16-1.jpg" alt="跟著臺灣漫遊錄吃遍台灣" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+        <div class="story-overlay">
+          <div class="story-info work-info">
+            <h3 class="work-title">跟著臺灣漫遊錄吃遍台灣</h3>
+            <span class="work-date">2026</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 1. 老鐵舖的餘溫 (work-1) -->
+      <a href="work-1.html" class="featured-story">
+        <div class="story-image">
+          <img src="./images/work-1/work-1-16.jpg" alt="老鐵舖的餘溫" onerror="this.parentNode.classList.add('image-placeholder')">
+        </div>
+        <div class="story-overlay">
+          <div class="story-info work-info">
+            <h3 class="work-title">老鐵舖的餘溫</h3>
+            <span class="work-date">2025.04.14</span>
+          </div>
+        </div>
+      </a>
+      
     </div>
 
+    <div class="works-bottom-layout">
+      <div class="marquee-container">
+        <div class="marquee-track">
+          <!-- 第一組圖片 -->
+          <div class="marquee-item"><img src="./images/signal/signal-1.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+          <div class="marquee-item"><img src="./images/signal/signal-2.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+          <div class="marquee-item"><img src="./images/signal/signal-4.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+          <div class="marquee-item"><img src="./images/signal/signal-5.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+          <div class="marquee-item"><img src="./images/signal/signal-6.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+          <div class="marquee-item"><img src="./images/signal/signal-7.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+          <div class="marquee-item"><img src="./images/signal/signal-8.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+
+          <!-- 第二組重複圖片（實現無縫銜接循環） -->
+          <div class="marquee-item"><img src="./images/signal/signal-1.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+          <div class="marquee-item"><img src="./images/signal/signal-2.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+          <div class="marquee-item"><img src="./images/signal/signal-4.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+          <div class="marquee-item"><img src="./images/signal/signal-5.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+          <div class="marquee-item"><img src="./images/signal/signal-6.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+          <div class="marquee-item"><img src="./images/signal/signal-7.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+          <div class="marquee-item"><img src="./images/signal/signal-8.jpg" alt="" onerror="this.parentNode.classList.add('image-placeholder')"></div>
+        </div>
+      </div>
+
+      <div class="works-more-wrapper">
+        <a href="works.html" class="about-more-btn">
+          <span>MORE WORKS</span>
+          <span class="btn-arrow">→</span>
+        </a>
+      </div>
+    </div>
   </section>
 
+  <section id="instagram-section" class="instagram-section fade-in-section">
+    <a href="https://www.instagram.com/ying._.photos" target="_blank" rel="noopener noreferrer" class="instagram-link">
+      <div class="instagram-image">
+        <img src="./images/instagram/instagram.jpg" alt="Instagram Background" onerror="this.style.display='none'">
+      </div>
+      <div class="instagram-content">
+        <p>FOLLOW MY WORK</p>
+        <h2>Instagram</h2>
+      </div>
+    </a>
+  </section>
 
-  <!-- Footer -->
-  <footer>
-    <span>Ying</span>
-    <span>© 2026</span>
+  <footer class="site-footer">
+    <div class="footer-top">
+      <a href="#top" class="footer-logo">Ying</a>
+      <div class="footer-menu">
+        <a href="#top">Top</a>
+        <a href="#about">About</a>
+        <a href="#works">Works</a>
+        <a href="#instagram-section">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Ying</span>
+    </div>
   </footer>
+
+  <script>
+    // 專案清單陣列（包含標籤 tags）
+    const allProjects = [
+      { id: "work-10", title: "西昌街的黃昏", date: "2025.04.13", url: "work-10.html", cover: "./images/work-10/work-10-1.jpg", tags: ["靜態", "文字"] },
+      { id: "work-1", title: "老鐵舖的餘溫", date: "2025.04.14", url: "work-1.html", cover: "./images/work-1/work-1-16.jpg", tags: ["靜態", "文字"] },
+      { id: "work-11", title: "發美皮鞋店", date: "2025.05.03", url: "work-11.html", cover: "./images/work-11/work-11-1.jpg", tags: ["靜態"] },
+      { id: "work-9", title: "繞境城事", date: "2025.05.04", url: "work-9.html", cover: "./images/work-9/work-9-11.jpg", tags: ["靜態", "文字"] },
+      { id: "work-2", title: "2025馬祖國際藝術島", date: "2025.11.07-10", url: "work-2.html", cover: "./images/work-2/work-2-29.jpg", tags: ["靜態"] },
+      { id: "work-7", title: "第四十三屆政大金旋獎年度形象音樂", date: "2026.01.17", url: "work-7.html", cover: "./images/work-7/work-7.jpg", tags: ["動態"] },
+      { id: "work-3", title: "228・0紀念行動", date: "2026.02.27", url: "work-3.html", cover: "./images/work-3/work-3-7.jpg", tags: ["靜態"] },
+      { id: "work-12", title: "台日友好 青森睡魔抵嘉", date: "2026.02.07 / 03.06", url: "work-12.html", cover: "./images/work-12/work-12-1.jpg", tags: ["靜態", "文字"] },
+      { id: "work-8", title: "「真和平，要國防」大遊行", date: "2026.05.23", url: "work-8.html", cover: "./images/work-8/work-8-21.jpg", tags: ["靜態"] },
+      { id: "work-13", title: "鹿港國際龍舟錦標賽", date: "2026.06.19", url: "work-13.html", cover: "./images/work-13/work-13-12.jpg", tags: ["靜態"] },
+      { id: "work-5", title: "與大道公等雨", date: "2026.06.22", url: "work-5.html", cover: "./images/work-5/work-5.jpg", tags: ["動態", "文字"] },
+      { id: "work-4", title: "台北迎城隍系列", date: "2026.06.25、27", url: "work-4.html", cover: "./images/work-4/暗訪夜巡-1.jpg", tags: ["靜態", "動態"] },
+      { id: "work-6", title: "浪漫屋", date: "2026.07.06", url: "work-6.html", cover: "./images/work-6/work-6-10.jpg", tags: ["靜態", "文字"] },
+      { id: "work-14", title: "雞籠中元祭", date: "2026.08.26", url: "work-14.html", cover: "./images/work-14/work-14-28.jpg", tags: ["靜態", "動態", "文字"] },
+      { id: "work-15", title: "溪洲記事：溪洲部落豐年祭", date: "2026.07/08", url: "work-15-index.html", cover: "./images/work-15/work-15-4-29.jpg", tags: ["靜態", "文字"] },
+      { id: "work-16", title: "跟著臺灣漫遊錄吃遍台灣", date: "2026", url: "work-16-index.html", cover: "./images/work-16/work-16-1.jpg", tags: ["靜態", "文字"] },
+      { id: "work-17", title: "Fountain Day 新竹篇", date: "2026.05.14", url: "work-17.html", cover: "./images/work-17/work-17-1.jpg", tags: ["動態", "文字"] },
+      { id: "work-18", title: "青鳥運動", date: "2024.05", url: "work-18.html", cover: "./images/work-18/work-18-7.jpg", tags: ["靜態", "文字"] }
+    ];
+
+    // 1. 關閉瀏覽器預設的滾動恢復
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // 2. 英雄區輪播圖 (Hero Carousel)
+    const slides = document.querySelectorAll('.carousel-slide');
+    let currentSlide = 0;
+
+    function activateSlide(index) {
+      const slide = slides[index];
+      if (!slide) return;
+      slide.classList.add('active');
+
+      setTimeout(() => {
+        slide.classList.add('zoom');
+      }, 50);
+    }
+
+    function deactivateSlide(index) {
+      const slide = slides[index];
+      if (!slide) return;
+      const img = slide.querySelector('img');
+
+      slide.classList.remove('active');
+
+      setTimeout(() => {
+        if (img) {
+          img.style.transition = 'none';
+          slide.classList.remove('zoom');
+          void img.offsetWidth;
+          img.style.transition = '';
+        }
+      }, 2000);
+    }
+
+    function nextSlide() {
+      if (slides.length === 0) return;
+      deactivateSlide(currentSlide);
+      currentSlide = (currentSlide + 1) % slides.length;
+      activateSlide(currentSlide);
+    }
+
+    if (slides.length > 0) {
+      activateSlide(0);
+      setInterval(nextSlide, 4500);
+    }
+
+    // 3. 滾動淡入觀察器
+    const observerOptions = {
+      root: null,
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const rect = entry.boundingClientRect;
+
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        } else {
+          if (rect.top > 0) {
+            entry.target.classList.remove('is-visible');
+          }
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in-section').forEach(el => {
+      observer.observe(el);
+    });
+
+    // 4. 頁面載入定位與白幕淡出控制 (精確區分 上一頁 vs 重刷)
+    const overlay = document.getElementById('transition-overlay');
+
+    function initPageOverlay() {
+      const savedY = sessionStorage.getItem('manual_back_scroll');
+      const headerOffset = 80;
+
+      if (window.location.hash) {
+        const targetElement = document.querySelector(window.location.hash);
+        if (targetElement) {
+          const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+          const offsetPosition = elementPosition - headerOffset;
+
+          window.scrollTo(0, offsetPosition);
+        }
+        history.replaceState(null, '', window.location.pathname);
+        sessionStorage.removeItem('manual_back_scroll');
+
+      } else if (savedY !== null) {
+        window.scrollTo(0, parseInt(savedY, 10));
+        sessionStorage.removeItem('manual_back_scroll');
+
+      } else {
+        window.scrollTo(0, 0);
+      }
+
+      setTimeout(() => {
+        if (overlay) {
+          overlay.classList.add('hidden');
+        }
+      }, 100);
+    }
+
+    window.addEventListener('DOMContentLoaded', initPageOverlay);
+
+    window.addEventListener('pageshow', (event) => {
+      const savedY = sessionStorage.getItem('manual_back_scroll');
+      if (savedY !== null) {
+        window.scrollTo(0, parseInt(savedY, 10));
+        sessionStorage.removeItem('manual_back_scroll');
+      }
+
+      if (overlay) {
+        overlay.classList.add('hidden');
+      }
+    });
+
+    // 5. 本頁錨點點擊平滑滑動 (包含 Top 按鈕)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const targetId = this.getAttribute('href');
+        let targetElement = null;
+
+        if (targetId === '#top' || targetId === '#') {
+          targetElement = document.body;
+        } else {
+          targetElement = document.querySelector(targetId);
+        }
+
+        if (!targetElement) return;
+
+        if (overlay) overlay.classList.remove('hidden');
+
+        setTimeout(() => {
+          const targetY = targetElement.getBoundingClientRect().top + window.pageYOffset;
+          window.scrollTo(0, targetY);
+
+          if (overlay) overlay.classList.add('hidden');
+        }, 350); 
+      });
+    });
+
+    // 6. 點擊外部頁面連結 觸發離場白幕
+    document.querySelectorAll('a[href]').forEach(anchor => {
+      const href = anchor.getAttribute('href');
+      const target = anchor.getAttribute('target');
+
+      if (href && !href.startsWith('#') && !href.startsWith('javascript:') && target !== '_blank') {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          const currentY = window.pageYOffset || document.documentElement.scrollTop;
+          sessionStorage.setItem('manual_back_scroll', currentY);
+
+          if (overlay) {
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+              window.location.href = href;
+            }, 350);
+          } else {
+            window.location.href = href;
+          }
+        });
+      }
+    });
+  </script>
 
 </body>
 </html>

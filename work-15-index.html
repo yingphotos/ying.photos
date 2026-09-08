@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>溪洲記事：溪洲部落豐年祭 — Ying Photos</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@p3ol/gen-yo-min-tc@1.0.0/index.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "GenYoMin TC", "GenYoMinTC-Regular", "Noto Serif TC", serif;
+      background: #f5f4f3;
+      color: #111111;
+      line-height: 1.8;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 全螢幕轉場白幕 */
+    .page-transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #f5f4f3;
+      z-index: 9999;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .page-transition-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 固定頁首導覽列 */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      mix-blend-mode: difference;
+      color: white;
+    }
+
+    nav .logo {
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    .back-btn {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      opacity: 0.6;
+    }
+
+    /* 專題 Header 區塊 */
+    .project-hero {
+      padding: 140px 32px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .project-title {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+
+    .project-date {
+      font-size: 14px;
+      color: #666;
+      font-family: Arial, sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+    /* 專題主文章容器 */
+    .story-article {
+      width: 100%;
+      padding: 0 0 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* 動態淡入單元 */
+    .story-block {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 2s cubic-bezier(0.16, 1, 0.3, 1), transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .story-block.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 左圖右文前言區塊 */
+    .intro-split-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px 60px;
+      width: 100%;
+      display: flex;
+      gap: 48px;
+      align-items: flex-start;
+    }
+
+    .intro-image-left {
+      flex: 1 1 45%;
+      background: #e8e8e8;
+      overflow: hidden;
+    }
+
+    .intro-image-left img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .intro-image-left img:hover {
+      transform: scale(1.01);
+    }
+
+    .intro-text-right {
+      flex: 1 1 55%;
+    }
+
+    .story-text {
+      font-size: 18px;
+      line-height: 2;
+      color: #2c2c2c;
+      letter-spacing: 0.05em;
+      width: 100%;
+      text-align: justify;
+    }
+
+    .story-text p {
+      margin-bottom: 20px;
+    }
+
+    .story-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* 子篇章區塊：下方無邊框 */
+    .chapters-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+      width: 100%;
+    }
+
+    .chapters-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .chapter-card {
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .chapter-image {
+      width: 100%;
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      background: #e8e8e8;
+      margin-bottom: 16px;
+    }
+
+    .chapter-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .chapter-card:hover .chapter-image img {
+      transform: scale(1.05);
+    }
+
+    .chapter-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      line-height: 1.4;
+      color: #111;
+    }
+
+    .chapter-date {
+      font-size: 13px;
+      color: #666;
+      font-family: Arial, sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+    /* 占位符樣式 */
+    .image-placeholder {
+      position: relative;
+      min-height: 250px;
+    }
+
+    .image-placeholder::after {
+      content: "IMAGE MISSING";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #999;
+    }
+
+    /* 底部導覽按鈕區（無上方分隔線） */
+    .project-footer-nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px 40px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      border-top: none;
+    }
+
+    /* 推薦區塊 (MORE WORKS) */
+    .recommend-section {
+      padding: 80px 32px 120px;
+      border-top: 1px solid #e0dfdd;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .recommend-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(32px, 4vw, 48px);
+      margin-bottom: 32px;
+      font-weight: 400;
+    }
+
+    .recommend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .recommend-card {
+      display: block;
+    }
+
+    .recommend-image {
+      width: 100%;
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      background: #e8e8e8;
+      margin-bottom: 16px;
+    }
+
+    .recommend-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .recommend-card:hover .recommend-image img {
+      transform: scale(1.05);
+    }
+
+    .recommend-info-title {
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+
+    .recommend-info-date {
+      font-size: 12px;
+      color: #777;
+    }
+
+    /* Lightbox Modal */
+    .image-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.88);
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: zoom-out;
+      padding: 40px;
+    }
+
+    .image-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .image-modal img {
+      max-width: 92vw;
+      max-height: 92vh;
+      object-fit: contain;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      transform: scale(0.96);
+    }
+
+    .image-modal.active img {
+      transform: scale(1);
+    }
+
+    .image-modal-close {
+      position: absolute;
+      top: 28px;
+      right: 32px;
+      font-size: 28px;
+      font-weight: 300;
+      color: #ffffff;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+      user-select: none;
+    }
+
+    .image-modal-close:hover {
+      opacity: 1;
+    }
+
+    /* RWD 手機版樣式 */
+    @media (max-width: 900px) {
+      .intro-split-wrapper {
+        flex-direction: column;
+        gap: 32px;
+      }
+
+      .intro-image-left, .intro-text-right {
+        width: 100%;
+        flex: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav, .project-hero, .intro-split-wrapper, .chapters-section, .project-footer-nav, .recommend-section {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .project-hero {
+        padding-top: 110px;
+        padding-bottom: 20px;
+      }
+
+      .story-text {
+        font-size: 16px;
+        line-height: 1.95;
+      }
+
+      .chapters-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .recommend-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-transition-overlay" id="transition-overlay"></div>
+
+  <div class="image-modal" id="image-modal">
+    <span class="image-modal-close" id="image-modal-close">✕</span>
+    <img src="" alt="" id="image-modal-img">
+  </div>
+
+  <nav>
+    <a href="index.html" class="logo">Ying</a>
+    <a href="works.html" class="back-btn">← Back to Works</a>
+  </nav>
+
+  <main>
+    <header class="project-hero">
+      <div class="project-header">
+        <h1 class="project-title">溪洲記事：溪洲部落豐年祭</h1>
+        <p class="project-date">2026.07/08</p>
+      </div>
+    </header>
+
+    <article class="story-article">
+
+      <!-- 前言左圖右文區塊 -->
+      <section class="story-block">
+        <div class="intro-split-wrapper">
+          <!-- 左側圖片 (work-15-1-1) -->
+          <div class="intro-image-left">
+            <img src="./images/work-15/work-15-1-1.jpg" alt="溪洲記事：溪洲部落豐年祭" onerror="this.parentNode.classList.add('image-placeholder')">
+          </div>
+          
+          <!-- 右側文字 -->
+          <div class="intro-text-right">
+            <div class="story-text">
+              <p>阿美族是傍水而居的民族。</p>
+              <p>四十多年前，溪洲部落的長老來到台北工作，在新店溪左岸發現了一塊與原鄉環境相似的地，便引新店溪的水源開闢此地。隨著北上尋求工作的阿美族人漸多，族人遂聚集於此搭建房屋，形成傍水而居的聚落，取名為Cinemnemay（原意：泉水湧出之地），又因緊鄰溪洲路，故名為溪州部落。</p>
+              <p>2007年，台北縣政府欲推行大碧潭再造計畫重劃行水區，判定溪洲部落建築群為違建，決定拆遷部落。部落居民不願遷徙至政府安排的安置所居住，並要求就地居住，因此在各界的支援下成立了後援會，展開長期抗爭。</p>
+              <p>歷經無數次的抗爭與會談，溪洲部落終於與政府爭取到鄰地重建的共識，同意在新建堤防上方，距離原溪洲部落100公尺處重建部落。然而，真正的難題才正要開始。政權與負責單位的迭代、族人與政府對資金補助的範圍存在資訊落差，再到廠商跑路，都讓溪洲部落族人的回家路變得漫長而沒有終點。2021年，新的溪洲部落正式完工，族人紛紛遷入。</p>
+              <p>這條尋找家的路，溪洲部落走了整整十四年。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 三個子篇章卡片區塊 -->
+      <section class="story-block">
+        <div class="chapters-section">
+          <div class="chapters-grid">
+
+            <a href="work-15-1.html" class="chapter-card">
+              <div class="chapter-image">
+                <img src="./images/work-15/work-15-1-13.jpg" alt="溪洲記事其一：你的圖書館是我蓋的" onerror="this.parentNode.classList.add('image-placeholder')">
+              </div>
+              <h2 class="chapter-title">溪洲記事其一：你的圖書館是我蓋的</h2>
+              <span class="chapter-date">2026.07.31</span>
+            </a>
+
+            <a href="work-15-2.html" class="chapter-card">
+              <div class="chapter-image">
+                <img src="./images/work-15/work-15-2-15.jpg" alt="溪洲記事其二：兩個豐年祭" onerror="this.parentNode.classList.add('image-placeholder')">
+              </div>
+              <h2 class="chapter-title">溪洲記事其二：兩個豐年祭</h2>
+              <span class="chapter-date">2026.08.16</span>
+            </a>
+
+            <a href="work-15-3.html" class="chapter-card">
+              <div class="chapter-image">
+                <img src="./images/work-15/work-15-4-25.jpg" alt="溪洲記事其三：Ilisin" onerror="this.parentNode.classList.add('image-placeholder')">
+              </div>
+              <h2 class="chapter-title">溪洲記事其三：Ilisin</h2>
+              <span class="chapter-date">2026.08.28-29</span>
+            </a>
+
+          </div>
+        </div>
+      </section>
+
+    </article>
+
+    <section class="recommend-section">
+      <h2 class="recommend-title">More Works</h2>
+      <div class="recommend-grid" id="recommend-grid">
+      </div>
+    </section>
+  </main>
+
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // 捲動淡入效果
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.story-block').forEach(el => observer.observe(el));
+
+    // 頁面轉場淡入
+    const overlay = document.getElementById('transition-overlay');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        if (overlay) overlay.classList.add('hidden');
+      }, 100);
+    });
+
+    window.addEventListener('pageshow', () => {
+      if (overlay) overlay.classList.add('hidden');
+    });
+
+    // 動態綁定轉場動畫至連結
+    function bindTransitionLinks() {
+      document.querySelectorAll('a[href]').forEach(anchor => {
+        const href = anchor.getAttribute('href');
+        const target = anchor.getAttribute('target');
+
+        if (href && !href.startsWith('#') && !href.startsWith('javascript:') && target !== '_blank') {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (overlay) {
+              overlay.classList.remove('hidden');
+              setTimeout(() => {
+                window.location.href = href;
+              }, 350);
+            } else {
+              window.location.href = href;
+            }
+          });
+        }
+      });
+    }
+
+    // 動態推薦專案（排除當前專題 work-15）
+    const CURRENT_WORK_ID = "work-15";
+
+    const allProjects = [
+      { id: "work-1", title: "老鐵舖的餘溫", date: "2025.04.14", url: "work-1.html", cover: "./images/work-1/work-1-16.jpg" },
+      { id: "work-2", title: "2025馬祖國際藝術島", date: "2025.11.07-10", url: "work-2.html", cover: "./images/work-2/work-2-29.jpg" },
+      { id: "work-3", title: "228・0紀念行動", date: "2026.02.27", url: "work-3.html", cover: "./images/work-3/work-3-7.jpg" },
+      { id: "work-4", title: "台北迎城隍系列", date: "2026.06.25、27", url: "work-4.html", cover: "./images/work-4/暗訪夜巡-1.jpg" },
+      { id: "work-5", title: "與大道公等雨", date: "2026.06.22", url: "work-5.html", cover: "./images/work-5/work-5.jpg" },
+      { id: "work-6", title: "浪漫屋", date: "2026.07.06", url: "work-6.html", cover: "./images/work-6/work-6-1.jpg" },
+      { id: "work-11", title: "發美皮鞋店", date: "2025.05.03", url: "work-11.html", cover: "./images/work-11/work-11-1.jpg" },
+      { id: "work-12", title: "台日友好 青森睡魔抵嘉", date: "2026.02.07 / 03.06", url: "work-12.html", cover: "./images/work-12/work-12-1.jpg" },
+      { id: "work-13", title: "鹿港國際龍舟錦標賽", date: "2026.06.19", url: "work-13.html", cover: "./images/work-13/work-13-1.jpg" },
+      { id: "work-14", title: "雞籠中元祭", date: "2026.06.19", url: "work-14.html", cover: "./images/work-14/work-14-1.jpg" },
+      { id: "work-15", title: "溪洲記事：溪洲部落豐年祭", date: "2026.07/08", url: "work-15-index.html", cover: "./images/work-15/work-15-4-29.jpg" },
+      { id: "work-16", title: "跟著《臺灣漫遊錄》吃遍台灣", date: "2026", url: "work-16-index.html", cover: "./images/work-16/work-16-1.jpg" },
+      { id: "work-17", title: "日進花影 活水營新竹篇", date: "2026.05.14", url: "work-17.html", cover: "./images/work-17/work-17-1.jpg" },
+      { id: "work-18", title: "青鳥運動", date: "2024.05", url: "work-18.html", cover: "./images/work-18/work-18-1.jpg" }
+    ];
+
+    function renderRecommendations() {
+      const otherProjects = allProjects.filter(p => p.id !== CURRENT_WORK_ID);
+      for (let i = otherProjects.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [otherProjects[i], otherProjects[j]] = [otherProjects[j], otherProjects[i]];
+      }
+
+      const selected = otherProjects.slice(0, 4);
+
+      const grid = document.getElementById('recommend-grid');
+      if (!grid) return;
+
+      grid.innerHTML = selected.map(p => `
+        <a href="${p.url}" class="recommend-card">
+          <div class="recommend-image">
+            <img src="${p.cover}" alt="${p.title}" onerror="this.parentNode.classList.add('image-placeholder')">
+          </div>
+          <div class="recommend-info">
+            <h3 class="recommend-info-title">${p.title}</h3>
+            <span class="recommend-info-date">${p.date}</span>
+          </div>
+        </a>
+      `).join('');
+
+      bindTransitionLinks();
+    }
+
+    renderRecommendations();
+
+    // Lightbox 功能（排除 <a> 連結包裹的圖片）
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('image-modal-img');
+    const modalClose = document.getElementById('image-modal-close');
+
+    document.querySelectorAll('.story-article img').forEach(img => {
+      if (!img.closest('a')) {
+        img.addEventListener('click', () => {
+          if (img.src) {
+            modalImg.src = img.src;
+            modalImg.alt = img.alt || '';
+            modal.classList.add('active');
+          }
+        });
+      }
+    });
+
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    if (modal) modal.addEventListener('click', closeModal);
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

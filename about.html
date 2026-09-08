@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Ying Photos</title>
+
+  <!-- 預先連線 Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@p3ol/gen-yo-min-tc@1.0.0/index.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "GenYoMin TC", "GenYoMinTC-Regular", "Noto Serif TC", serif;
+      font-weight: 400;
+      background: #f5f4f3;
+      color: #111111;
+      line-height: 1.8;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* 頁面跳轉白幕 */
+    .page-transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #f5f4f3;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .page-transition-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* 頁首導覽列：左 Ying (回頂頁)，右 Back (直達 About 區塊) */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 28px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      mix-blend-mode: difference;
+      color: white;
+    }
+
+    nav .logo {
+      font-size: 15px;
+      letter-spacing: 0.08em;
+    }
+
+    nav .back-btn {
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      transition: opacity 0.3s ease;
+    }
+
+    nav .back-btn:hover {
+      opacity: 1;
+    }
+
+    /* 滾動淡入效果 (動畫時間 2 秒) */
+    .fade-in-section {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 2s cubic-bezier(0.16, 1, 0.3, 1), transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .fade-in-section.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 主容器 */
+    .about-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 140px 32px 80px;
+    }
+
+    /* 頁面大標題 */
+    .page-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(64px, 12vw, 120px);
+      letter-spacing: -0.04em;
+      line-height: 0.85;
+      margin-bottom: 60px;
+      color: #111111;
+    }
+
+    /* 區段標題風格 */
+    .section-label {
+      font-size: 22px;
+      letter-spacing: 0.08em;
+      color: #111111;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    /* 1. 關於我雙欄網格 */
+    .about-me-grid {
+      display: grid;
+      grid-template-columns: 0.7fr 1.5fr;
+      gap: 48px;
+      align-items: start;
+      margin-bottom: 80px;
+    }
+
+    /* 左側個人照片容器 (正方形) */
+    .profile-photo-container {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #e8e8e8;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .profile-photo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 右側關於我文字內容 */
+    .about-me-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 經歷清單：連貫灰色直線 */
+    .experience-timeline {
+      list-style: none;
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 16px;
+      border-left: 1.5px solid #cccccc;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .experience-timeline li {
+      font-size: clamp(15px, 1.2vw, 17px);
+      letter-spacing: 0.05em;
+      color: #222222;
+      line-height: 1.6;
+    }
+
+    /* 簡介內文 */
+    .bio-paragraph {
+      font-size: clamp(16px, 1.25vw, 18px);
+      letter-spacing: 0.06em;
+      color: #222222;
+      text-align: justify;
+      line-height: 2;
+    }
+
+    /* 2. 我的理念區塊 */
+    .philosophy-section {
+      border-top: 1px solid #dddddd;
+      padding-top: 60px;
+    }
+
+    /* 「我的理念」字體加大，比項目的標題更突出 */
+    .philosophy-section .section-label {
+      font-size: clamp(28px, 3vw, 36px);
+      margin-bottom: 32px;
+    }
+
+    .philosophy-list {
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+      margin-top: 20px;
+    }
+
+    .philosophy-item {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .philosophy-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    /* 數字與標題同高、同大小 */
+    .philosophy-num {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(22px, 2.2vw, 28px);
+      letter-spacing: 0.05em;
+      color: #888888;
+    }
+
+    .philosophy-title {
+      font-size: clamp(20px, 2.2vw, 24px);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: #111111;
+      line-height: 1.4;
+    }
+
+    .philosophy-text {
+      font-size: clamp(15px, 1.2vw, 17px);
+      letter-spacing: 0.05em;
+      color: #333333;
+      text-align: justify;
+      line-height: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* 頁尾 */
+    footer {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 32px 40px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-top: 1px solid #111111;
+      padding-top: 20px;
+      color: #111111;
+    }
+
+    /* 手機版響應式 (RWD) */
+    @media (max-width: 768px) {
+      nav { padding: 20px; }
+      .about-wrapper { padding: 110px 20px 60px; }
+      
+      .about-me-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .profile-photo-container {
+        width: 70%;
+        margin: 0 auto;
+        aspect-ratio: 1 / 1;
+      }
+
+      footer { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-transition-overlay" id="transition-overlay"></div>
+
+  <!-- 頁首導覽：左 Ying (回頂頁)，右 Back (直達 About 區塊) -->
+  <nav>
+    <a href="index.html#top" class="logo">Ying</a>
+    <a href="index.html#about" class="back-btn">← Back</a>
+  </nav>
+
+  <!-- 主要內容區 -->
+  <main class="about-wrapper">
+    <h1 class="page-title fade-in-section">About</h1>
+
+    <!-- 區塊一：關於我 -->
+    <section class="about-me-grid fade-in-section">
+      <div class="profile-photo-container">
+        <img src="./images/profile/profile.jpg" alt="Ying Personal Photo" onerror="this.parentNode.classList.add('image-placeholder')">
+      </div>
+
+      <div class="about-me-content">
+        <h2 class="section-label">吳翃穎</h2>
+        
+        <ul class="experience-timeline">
+          <li>動物園大學廣電系、日文系</li>
+          <li>第四十三屆政大金旋獎影像組長</li>
+          <li>第四、五屆文化總會校園大使</li>
+        </ul>
+
+        <p class="bio-paragraph">
+          在臺北城中表町一丁目長大的台灣囡仔，INFJ天秤座，喜歡廟會、老房子和一切老事物。這輩子除了到處旅行按快門和寫文字，好像沒有其他太擅長的事。耳機裡有90%是台灣獨立音樂，談到棒球的話肯定支持統一獅。目前計劃到日本交換一年。
+        </p>
+      </div>
+    </section>
+
+    <!-- 區塊二：我的理念 -->
+    <section class="philosophy-section fade-in-section">
+      <h2 class="section-label">我的理念</h2>
+
+      <div class="philosophy-list">
+        
+        <!-- 01 -->
+        <article class="philosophy-item">
+          <div class="philosophy-header">
+            <span class="philosophy-num">01</span>
+            <h3 class="philosophy-title">拍照給未來的人看</h3>
+          </div>
+          <div class="philosophy-text">
+            <p>你是否曾經想過，我們是如何得知一百年前，人們穿什麼樣的衣服、過著怎麼樣的物質生活？儘管文字記述可以提供線索，卻沒有一種方式能比影像來得更清晰可見。</p>
+            <p>影像所凝聚的當下，包含了一個場景的人事時地物，它不僅是這個時代傳播與敘事的工具，把時間軸拉長來看，影像更是一種帶著過去的訊息前往未來的重要檔案。</p>
+            <p>在AI當道的現在，帶有真實人性的影像顯得格外重要。我想用更長遠的眼光紀錄下屬於台灣的瞬間，讓未來的人看見屬於我們自己的文化記憶。</p>
+          </div>
+        </article>
+
+        <!-- 02 -->
+        <article class="philosophy-item">
+          <div class="philosophy-header">
+            <span class="philosophy-num">02</span>
+            <h3 class="philosophy-title">文化是認同的基礎</h3>
+          </div>
+          <div class="philosophy-text">
+            <p>台灣文化是在長期的遷移、多元文化的輸入下所形成的。也因為我們對自己的認同，在政權迭代之下出現了斷裂，所以台灣人百年來從未停歇腳步，探問自己「我們是誰？」。</p>
+            <p>文化是一個群人的習慣，是一個地方，乃至一個民族長期積累的知識經驗。雖然台灣文化源自於多文化的輸入，但在種種考驗下，我們也發展出了一套屬於我們自己的風格。在全球化的時代下，文化成為了亮眼的標籤，我們引以為傲的自我認同，讓我們在汪洋中變得顯眼。近期風靡國際的「台灣感性」就是具體的案例。</p>
+            <p>我期待能藉由影像與文字，結合短影音與多語言的新方式，讓更多人看見屬於我們自己的美好。也期待藉由重拾這些美好，我們都能抬頭挺胸地向世界說出：我們是台灣人。</p>
+          </div>
+        </article>
+
+        <!-- 03 -->
+        <article class="philosophy-item">
+          <div class="philosophy-header">
+            <span class="philosophy-num">03</span>
+            <h3 class="philosophy-title">用影像讓世界看見台灣</h3>
+          </div>
+          <div class="philosophy-text">
+            <p>台灣自古以來便是世界貿易與交通要地，招來了多元的文化在此留下足跡。「台灣」的概念絕不僅限於中華文化，而是與原住民族、日本、荷西以及各式各樣文化交織而成的共同體。台灣人因此善於融會貫通，同時也樂於接納異己，這就是外國人來台時常念念不忘的「人情味」。</p>
+            <p>影像不只能紀錄台灣文化的特色，更能紀錄下這片土地上人與人、人與文化的互動。我期待外國朋友們能藉由台灣的影像，在台灣文化中找到共鳴，甚或在人情味裡找到屬於自己的一份歸屬。</p>
+            <p>如此，台灣得以在世界的舞臺被更多人看見。我始終相信，有一天，我們也能用平等的地位向世界介紹，我們是台灣。</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- 頁尾 -->
+  <footer>
+    <span></span>
+    <span>© 2026 YING</span>
+  </footer>
+
+  <script>
+    // 1. 滾動淡入觀察器 (支援重複播放，且徹底解決頂端 About 字樣跳動問題)
+    const observerOptions = {
+      root: null,
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const rect = entry.boundingClientRect;
+
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        } else {
+          // 關鍵修正：只有當元素是往下滑到螢幕下方外 (rect.top > 0) 時才重置動畫
+          // 如果是往上推到螢幕頂端外 (rect.top <= 0)，代表已經滑到最上面，保持顯示不動，絕不跳動
+          if (rect.top > 0) {
+            entry.target.classList.remove('is-visible');
+          }
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in-section').forEach(el => {
+      observer.observe(el);
+    });
+
+    // 2. 頁面過渡白幕動畫
+    const overlay = document.getElementById('transition-overlay');
+    document.querySelectorAll('a').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href && !href.startsWith('#') && !href.startsWith('http')) {
+          e.preventDefault();
+          overlay.classList.add('active');
+          setTimeout(() => {
+            window.location.href = href;
+          }, 350);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
