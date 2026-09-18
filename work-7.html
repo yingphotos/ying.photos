@@ -180,6 +180,51 @@
       border: 0;
     }
 
+    /* Credit 製作團隊區塊 */
+    .project-credits {
+      max-width: 1000px;
+      margin: 40px auto 0;
+      padding: 0 32px;
+      width: 100%;
+    }
+
+    .credit-section-title {
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      margin: 24px 0 16px;
+      font-family: Arial, sans-serif;
+      border-bottom: 1px solid #e0dfdd;
+      padding-bottom: 8px;
+    }
+
+    .credit-section-title:first-child {
+      margin-top: 0;
+    }
+
+    .credit-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px 32px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .credit-item {
+      display: flex;
+      gap: 12px;
+    }
+
+    .credit-role {
+      color: #888;
+      min-width: 90px;
+    }
+
+    .credit-name {
+      color: #111;
+    }
+
     /* 底部導覽按鈕區 (僅保留右側 Next Work) */
     .project-footer-nav {
       max-width: 1000px;
@@ -288,7 +333,7 @@
 
     /* RWD 手機版樣式 */
     @media (max-width: 768px) {
-      nav, .project-hero, .project-footer-nav, .recommend-section, .video-container-4-3 {
+      nav, .project-hero, .project-footer-nav, .recommend-section, .video-container-4-3, .project-credits {
         padding-left: 20px;
         padding-right: 20px;
       }
@@ -300,6 +345,11 @@
 
       .recommend-grid {
         grid-template-columns: 1fr;
+      }
+
+      .credit-list {
+        grid-template-columns: 1fr;
+        gap: 8px;
       }
     }
   </style>
@@ -336,6 +386,57 @@
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
               allowfullscreen>
             </iframe>
+          </div>
+        </div>
+
+        <!-- 製作團隊 Credit 區塊 -->
+        <div class="project-credits">
+          <h3 class="credit-section-title">音樂製作</h3>
+          <div class="credit-list">
+            <div class="credit-item">
+              <span class="credit-role">音樂製作</span>
+              <span class="credit-name">yyt @http.yyt.31</span>
+            </div>
+          </div>
+
+          <h3 class="credit-section-title">影像製作團隊</h3>
+          <div class="credit-list">
+            <div class="credit-item">
+              <span class="credit-role">主演</span>
+              <span class="credit-name">蘇悅 Soo Ua̍t</span>
+            </div>
+            <div class="credit-item">
+              <span class="credit-role">導演</span>
+              <span class="credit-name">張哲誠 @acleimoncent_</span>
+            </div>
+            <div class="credit-item">
+              <span class="credit-role">副導演</span>
+              <span class="credit-name">陳采妏 @lc__0907</span>
+            </div>
+            <div class="credit-item">
+              <span class="credit-role">製片</span>
+              <span class="credit-name">陳宣如 @sour7i</span>
+            </div>
+            <div class="credit-item">
+              <span class="credit-role">場記</span>
+              <span class="credit-name">Regina</span>
+            </div>
+            <div class="credit-item">
+              <span class="credit-role">攝影</span>
+              <span class="credit-name">吳翃穎 @ying._.photos</span>
+            </div>
+            <div class="credit-item">
+              <span class="credit-role">燈光</span>
+              <span class="credit-name">吳哲宇 @alieen_.n</span>
+            </div>
+            <div class="credit-item">
+              <span class="credit-role">後製</span>
+              <span class="credit-name">張哲誠 @acleimoncent_</span>
+            </div>
+            <div class="credit-item">
+              <span class="credit-role">器材協力</span>
+              <span class="credit-name">李旻倫 政大傳院劇場 顧晟安</span>
+            </div>
           </div>
         </div>
       </section>

@@ -14,7 +14,7 @@
     gtag('config', 'G-S067NREK0J');
   </script>
   
-  <title>Ep.2 冰 — 跟著《臺灣漫遊錄》吃遍台灣</title>
+  <title>Ch.2 冰 — 跟著《臺灣漫遊錄》吃遍台灣</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -214,11 +214,11 @@
     }
 
     .slider-arrow.prev {
-      left: -22px;
+      left: -60px;
     }
 
     .slider-arrow.next {
-      right: -22px;
+      right: -60px;
     }
 
     .slider-arrow.disabled {
@@ -476,13 +476,9 @@
         padding-bottom: 30px;
       }
 
-      /* 手機上將箭頭內收避免出界 */
-      .slider-arrow.prev {
-        left: 10px;
-      }
-
-      .slider-arrow.next {
-        right: 10px;
+      /* 手機上隱藏箭頭按鈕，完全靠滑動 */
+      .slider-arrow {
+        display: none;
       }
 
       .recommend-grid {
@@ -569,6 +565,14 @@
 
       <!-- IG 風格指示點點條 -->
       <div class="slider-dots" id="slider-dots"></div>
+    </div>
+
+    <!-- 右下角 Next Work 導覽 -->
+    <div class="next-work-container">
+      <a href="work-16-2.html" class="next-work-link">
+        <span class="next-work-label">Next Episode</span>
+        <span class="next-work-title">Ch.3 咖哩 →</span>
+      </a>
     </div>
 
     <!-- 推薦區塊 (MORE WORKS) -->

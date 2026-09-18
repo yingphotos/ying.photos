@@ -145,10 +145,10 @@
     }
 
     /* =========================
-       頁首導覽列
+       頁首導覽列 (修改為自然停留在頁首)
     ========================= */
     nav {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
@@ -476,7 +476,7 @@
       display: flex;
       gap: 10px;
       width: max-content;
-      animation: marqueeScroll 55s linear infinite; /* 時間由 60s 調整為 25s，加快速度 */
+      animation: marqueeScroll 55s linear infinite;
     }
 
     .marquee-track:hover {
@@ -705,7 +705,7 @@
 
   <div class="page-transition-overlay" id="transition-overlay"></div>
 
-  <nav>
+  <nav id="navbar">
     <a href="#top" class="logo">Ying</a>
     <div class="menu">
       <a href="#top">Top</a>

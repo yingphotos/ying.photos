@@ -61,7 +61,7 @@
       pointer-events: none;
     }
 
-    /* 頁首導覽列 */
+        /* 固定頁首導覽列 */
     nav {
       position: fixed;
       top: 0;
@@ -72,8 +72,15 @@
       justify-content: space-between;
       align-items: center;
       z-index: 100;
-      mix-blend-mode: difference;
-      color: white;
+      background-color: #f5f4f3;
+      color: #111111;
+      transition: transform 2.0s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* 往下滑動隱藏：2.0 秒收起 */
+    nav.nav-hidden {
+      transform: translateY(-100%);
+      transition: transform 2.0s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     nav .logo {
@@ -440,9 +447,10 @@
 
   <div class="page-transition-overlay" id="transition-overlay"></div>
 
-  <nav>
+  <!-- 將原本的 <nav> 替換成下面這行 -->
+  <nav id="navbar">
     <a href="index.html" class="logo">Ying</a>
-    <a href="index.html#works" class="back-btn">← Back to Selected Works</a>
+    <a href="index.html" class="back-btn">← Back To Selected Works</a>
   </nav>
 
   <main>
@@ -521,7 +529,7 @@
       { id: "work-6", title: "浪漫屋", date: "2026.07.06", url: "work-6.html", cover: "./images/work-6/work-6-10.jpg", tags: ["靜態", "文字"] },
       { id: "work-14", title: "雞籠中元祭", date: "2026.08.26", url: "work-14.html", cover: "./images/work-14/work-14-28.jpg", tags: ["靜態", "動態", "文字"] },
       { id: "work-15", title: "溪洲記事：溪洲部落豐年祭", date: "2026.08", url: "work-15-index.html", cover: "./images/work-15/work-15-4-29.jpg", tags: ["靜態", "文字"] },
-      { id: "work-16", title: "跟著臺灣漫遊錄吃遍台灣", date: "2026", url: "work-16-index.html", cover: "./images/work-16/work-16-1.jpg", tags: ["靜態", "文字"] },
+      { id: "work-16", title: "跟著臺灣漫遊錄吃遍台灣", date: "2026", url: "work-16-index.html", cover: "./images/work-16/work-16-1.jpg", tags: ["靜態", "動態","文字"] },
       { id: "work-17", title: "Fountain Day 新竹篇", date: "2026.05.14", url: "work-17.html", cover: "./images/work-17/work-17-1.jpg", tags: ["動態", "文字"] },
       { id: "work-18", title: "青鳥運動", date: "2024.05", url: "work-18.html", cover: "./images/work-18/work-18-7.jpg", tags: ["靜態", "文字"] }
     ];
@@ -706,6 +714,24 @@
         }
       });
     }
+
+    // ----------------------------------------------------
+    // 導覽列滾動顯示 / 隱藏控制
+    // ----------------------------------------------------
+    const navbar = document.getElementById('navbar');
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        navbar.classList.add('nav-hidden');
+      } else {
+        navbar.classList.remove('nav-hidden');
+      }
+
+      lastScrollY = currentScrollY;
+    });
   </script>
 </body>
 </html>

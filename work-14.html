@@ -72,10 +72,17 @@
       justify-content: space-between;
       align-items: center;
       z-index: 100;
-      mix-blend-mode: difference;
-      color: white;
+      background-color: #f5f4f3;
+      color: #111111;
+      transition: transform 2.0s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
+    /* 往下滑動隱藏：2.0 秒收起 */
+    nav.nav-hidden {
+      transform: translateY(-100%);
+      transition: transform 2.0s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
     nav .logo {
       font-size: 15px;
       letter-spacing: 0.08em;
@@ -475,7 +482,8 @@
     <img src="" alt="" id="image-modal-img">
   </div>
 
-  <nav>
+  <!-- 將原本的 <nav> 替換成下面這行 -->
+  <nav id="navbar">
     <a href="index.html" class="logo">Ying</a>
     <a href="works.html" class="back-btn">← Back to Works</a>
   </nav>
@@ -787,6 +795,24 @@
       if (e.key === 'Escape' && modal.classList.contains('active')) {
         closeModal();
       }
+    });
+
+    // ----------------------------------------------------
+    // 導覽列滾動顯示 / 隱藏控制
+    // ----------------------------------------------------
+    const navbar = document.getElementById('navbar');
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        navbar.classList.add('nav-hidden');
+      } else {
+        navbar.classList.remove('nav-hidden');
+      }
+
+      lastScrollY = currentScrollY;
     });
   </script>
 </body>

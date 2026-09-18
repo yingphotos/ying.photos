@@ -62,7 +62,9 @@ opacity: 0;
 pointer-events: none;
 }
 
-/* 固定頁首導覽列 */
+/* ==================================================== */
+/* 固定頁首導覽列（無分隔線、無漸變、純底色 + 平滑進出） */
+/* ==================================================== */
 nav {
 position: fixed;
 top: 0;
@@ -73,8 +75,19 @@ display: flex;
 justify-content: space-between;
 align-items: center;
 z-index: 100;
-mix-blend-mode: difference;
-color: white;
+
+/* 與網頁背景完全同色，無邊框、無漸變、無陰影 */
+background-color: #f5f4f3;
+color: #111111;
+
+/* 預設出現動畫：2.0 秒 */
+transition: transform 2.0s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 往下滑動隱藏：3.5 秒緩慢收起 */
+nav.nav-hidden {
+transform: translateY(-100%);
+transition: transform 2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 nav .logo {
@@ -449,7 +462,8 @@ gap: 60px;
 <img src="" alt="" id="image-modal-img">
 </div>
 
-<nav>
+<!-- 頁首導覽列 -->
+<nav id="navbar">
 <a href="index.html" class="logo">Ying</a>
 <a href="works.html" class="back-btn">← Back to Works</a>
 </nav>
@@ -684,7 +698,6 @@ window.location.href = href;
 // ----------------------------------------------------
 const CURRENT_WORK_ID = "work-1";
 
-// 未來新增專題時，直接在此陣列加入物件即可：
 const allProjects = [
 { id: "work-1", title: "老鐵舖的餘溫", date: "2025.04.14", url: "work-1.html", cover: "./images/work-1/work-1-16.jpg" },
       { id: "work-2", title: "2025馬祖國際藝術島", date: "2025.11.07-10", url: "work-2.html", cover: "./images/work-2/work-2-29.jpg" },
@@ -703,21 +716,17 @@ const allProjects = [
 ];
 
 function renderRecommendations() {
-// 1. 過濾掉當前頁面作品
 const otherProjects = allProjects.filter(p => p.id !== CURRENT_WORK_ID);
-// 2. 隨機洗牌演算法
 for (let i = otherProjects.length - 1; i > 0; i--) {
 const j = Math.floor(Math.random() * (i + 1));
 [otherProjects[i], otherProjects[j]] = [otherProjects[j], otherProjects[i]];
 }
 
-// 3. 取出前 4 個作品
 const selected = otherProjects.slice(0, 4);
 
 const grid = document.getElementById('recommend-grid');
 if (!grid) return;
 
-// 4. 渲染卡片
 grid.innerHTML = selected.map(p => `
 <a href="${p.url}" class="recommend-card">
 <div class="recommend-image">
@@ -760,6 +769,25 @@ document.addEventListener('keydown', (e) => {
 if (e.key === 'Escape' && modal.classList.contains('active')) {
 closeModal();
 }
+});
+
+// ----------------------------------------------------
+// 導覽列滾動顯示 / 隱藏控制
+// ----------------------------------------------------
+const navbar = document.getElementById('navbar');
+let lastScrollY = window.scrollY;
+
+window.addEventListener('scroll', () => {
+  const currentScrollY = window.scrollY;
+
+  // 往下滑動超過 50px 時隱藏導覽列，往上滑動時顯示導覽列
+  if (currentScrollY > lastScrollY && currentScrollY > 50) {
+    navbar.classList.add('nav-hidden');
+  } else {
+    navbar.classList.remove('nav-hidden');
+  }
+
+  lastScrollY = currentScrollY;
 });
 </script>
 </body>

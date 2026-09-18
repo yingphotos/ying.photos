@@ -14,7 +14,7 @@
     gtag('config', 'G-S067NREK0J');
   </script>
   
-  <title>跟著《臺灣漫遊錄》吃遍台灣 — Ying Photos</title>
+  <title>Ep.3 — 跟著《臺灣漫遊錄》吃遍台灣</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -100,154 +100,64 @@
     /* 專題 Header 區塊 */
     .project-hero {
       padding: 140px 32px 40px;
-      max-width: 1200px;
+      max-width: 800px;
       margin: 0 auto;
+      text-align: center;
+    }
+
+    .project-subtitle {
+      font-size: 14px;
+      letter-spacing: 0.15em;
+      color: #666;
+      margin-bottom: 8px;
+      text-transform: uppercase;
     }
 
     .project-title {
-      font-size: clamp(32px, 5vw, 56px);
+      font-size: clamp(28px, 4vw, 44px);
       font-weight: 400;
       letter-spacing: 0.04em;
-      line-height: 1.25;
+      line-height: 1.3;
       margin-bottom: 12px;
     }
 
     .project-date {
       font-size: 14px;
-      color: #666;
+      color: #777;
       font-family: Arial, sans-serif;
       letter-spacing: 0.05em;
     }
 
-    /* 專題主文章容器 */
-    .story-article {
+    /* 9:16 直式 Reels 影片專用容器 */
+    .reel-video-wrapper {
+      max-width: 380px; /* 大螢幕最適宜觀看寬度 */
       width: 100%;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
+      margin: 0 auto 100px;
+      padding: 0 20px;
     }
 
-    /* 動態淡入單元 */
-    .story-block {
-      display: flex;
-      flex-direction: column;
+    .reel-video-container {
+      position: relative;
       width: 100%;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 2s cubic-bezier(0.16, 1, 0.3, 1), transform 2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .story-block.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* 前言純文字區塊 */
-    .intro-text-wrapper {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 32px 60px;
-      width: 100%;
-    }
-
-    .story-text {
-      font-size: 18px;
-      line-height: 2;
-      color: #2c2c2c;
-      letter-spacing: 0.05em;
-      width: 100%;
-      text-align: justify;
-    }
-
-    .story-text p {
-      margin-bottom: 20px;
-    }
-
-    .story-text p:last-child {
-      margin-bottom: 0;
-    }
-
-    /* 子篇章區塊：底部分隔線作為唯一的分隔線 */
-    .chapters-section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 32px 80px;
-      width: 100%;
-      border-bottom: 1px solid #e0dfdd;
-    }
-
-    .chapters-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 32px;
-      margin-bottom: 60px;
-    }
-
-    .chapter-card {
-      display: block;
-      transition: transform 0.3s ease;
-    }
-
-    .chapter-image {
-      width: 100%;
-      aspect-ratio: 4 / 5; /* 修改為直式 4:5 */
+      aspect-ratio: 9 / 16; /* 9:16 直式比例 */
+      border-radius: 12px;
       overflow: hidden;
-      background: #e8e8e8;
-      margin-bottom: 16px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+      background: #000000;
     }
 
-    .chapter-image img {
+    .reel-video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .chapter-card:hover .chapter-image img {
-      transform: scale(1.05);
-    }
-
-    .chapter-title {
-      font-size: 18px;
-      font-weight: 500;
-      margin-bottom: 6px;
-      line-height: 1.4;
-      color: #111;
-    }
-
-    .chapter-date {
-      font-size: 13px;
-      color: #666;
-      font-family: Arial, sans-serif;
-      letter-spacing: 0.05em;
-    }
-
-    /* 未完待續 區塊（維持原樣明體） */
-    .to-be-continued {
-      text-align: center;
-      padding: 20px 0 0;
-    }
-
-    .tbc-title {
-      font-family: "GenYoMin TC", "GenYoMinTC-Regular", "Noto Serif TC", serif;
-      font-size: 24px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      color: #333;
-      margin-bottom: 6px;
-    }
-
-    .tbc-sub {
-      font-size: 13px;
-      color: #888;
-      letter-spacing: 0.1em;
+      border: 0;
     }
 
     /* 占位符樣式 */
     .image-placeholder {
       position: relative;
-      min-height: 250px;
     }
 
     .image-placeholder::after {
@@ -263,9 +173,10 @@
 
     /* 推薦區塊 (MORE WORKS) */
     .recommend-section {
-      padding: 80px 32px 120px;
+      padding: 80px 32px 60px;
       max-width: 1200px;
       margin: 0 auto;
+      border-top: 1px solid #e0dfdd;
     }
 
     .recommend-title {
@@ -315,82 +226,16 @@
       color: #777;
     }
 
-    /* Lightbox Modal */
-    .image-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.88);
-      z-index: 10000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-      cursor: zoom-out;
-      padding: 40px;
-    }
-
-    .image-modal.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .image-modal img {
-      max-width: 92vw;
-      max-height: 92vh;
-      object-fit: contain;
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
-      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-      transform: scale(0.96);
-    }
-
-    .image-modal.active img {
-      transform: scale(1);
-    }
-
-    .image-modal-close {
-      position: absolute;
-      top: 28px;
-      right: 32px;
-      font-size: 28px;
-      font-weight: 300;
-      color: #ffffff;
-      cursor: pointer;
-      line-height: 1;
-      opacity: 0.7;
-      transition: opacity 0.3s ease;
-      user-select: none;
-    }
-
-    .image-modal-close:hover {
-      opacity: 1;
-    }
-
-    /* RWD 手機版樣式 */
+    /* RWD 微調 */
     @media (max-width: 768px) {
-      nav, .project-hero, .intro-text-wrapper, .chapters-section, .recommend-section {
+      nav, .project-hero, .recommend-section {
         padding-left: 20px;
         padding-right: 20px;
       }
 
       .project-hero {
         padding-top: 110px;
-        padding-bottom: 20px;
-      }
-
-      .story-text {
-        font-size: 16px;
-        line-height: 1.95;
-      }
-
-      .chapters-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-        margin-bottom: 40px;
+        padding-bottom: 30px;
       }
 
       .recommend-grid {
@@ -404,79 +249,31 @@
 
   <div class="page-transition-overlay" id="transition-overlay"></div>
 
-  <div class="image-modal" id="image-modal">
-    <span class="image-modal-close" id="image-modal-close">✕</span>
-    <img src="" alt="" id="image-modal-img">
-  </div>
-
   <nav>
     <a href="index.html" class="logo">Ying</a>
-    <a href="works.html" class="back-btn">← Back to Works</a>
+    <a href="work-16-index.html" class="back-btn">← Back</a>
   </nav>
 
   <main>
+    <!-- 標題與副標題 (保持同 style) -->
     <header class="project-hero">
-      <div class="project-header">
-        <h1 class="project-title">跟著《臺灣漫遊錄》吃遍台灣</h1>
-        <p class="project-date">2026</p>
-      </div>
+      <p class="project-subtitle">跟著《臺灣漫遊錄》吃遍台灣</p>
+      <h1 class="project-title">Ch.3 咖哩</h1>
+      <p class="project-date">2026.09</p>
     </header>
 
-    <article class="story-article">
-
-      <!-- 前言純文字區塊 -->
-      <section class="story-block">
-        <div class="intro-text-wrapper">
-          <div class="story-text">
-            <p>你知道今年得了國際布克獎的《臺灣漫遊錄》嗎？這本小說講述日治時期的台灣，旅居台灣的日籍作家青山千鶴子，與台籍通譯王千鶴，在搭乘縱貫鐵路的旅程中透過各地美食認識台灣文化的故事，探討女性與後殖民等議題。</p>
-            <p>因為小說的啟發，我開始翻閱關於台灣飲食的文獻和影像，才發現其實我們的食物裡，潛藏著台灣的族群與移動歷程。於是我決定假借攝影的名義到處吃美食，然後把這些食物的故事介紹給大家！</p>
-            <p>我始終認為，文化就是在這片土地上的人們生存的痕跡，而我們都能在文化的旅程中找到自己是誰。文化的形式不必是生硬的教條或教科書，它可以是藝術，可以是飲食，當然也可以是攝影。</p>
-            <p>接下來，就讓我們一起跟著《臺灣漫遊錄》吃遍台灣，認識屬於我們的故事吧！</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- 子篇章卡片區塊 -->
-      <section class="story-block">
-        <div class="chapters-section">
-          <div class="chapters-grid">
-
-            <a href="work-16-1.html" class="chapter-card">
-              <div class="chapter-image">
-                <img src="./images/work-16/work-16-1-1.jpg" alt="跟著《臺灣漫遊錄》吃遍台灣 其一" onerror="this.parentNode.classList.add('image-placeholder')">
-              </div>
-              <h2 class="chapter-title">Ch.1 滷肉飯</h2>
-              <span class="chapter-date">2026.07</span>
-            </a>
-
-            <a href="work-16-2.html" class="chapter-card">
-              <div class="chapter-image">
-                <img src="./images/work-16/work-16-2-1.jpg" alt="跟著《臺灣漫遊錄》吃遍台灣 其二" onerror="this.parentNode.classList.add('image-placeholder')">
-              </div>
-              <h2 class="chapter-title">Ch.2 冰</h2>
-              <span class="chapter-date">2026.08</span>
-            </a>
-
-            <a href="work-16-3.html" class="chapter-card">
-              <div class="chapter-image">
-                <img src="./images/work-16/work-16-3.jpg" alt="跟著《臺灣漫遊錄》吃遍台灣 其三" onerror="this.parentNode.classList.add('image-placeholder')">
-              </div>
-              <h2 class="chapter-title">Ch.3</h2>
-              <span class="chapter-date">2026.09</span>
-            </a>
-
-          </div>
-
-          <!-- To Be Continued 提示（明體） -->
-          <div class="to-be-continued">
-            <h3 class="tbc-title">更多篇章持續連載中</h3>
-            <p class="tbc-sub">To Be Continued...</p>
-          </div>
-
-        </div>
-      </section>
-
-    </article>
+    <!-- 9:16 YouTube Shorts / Reels 影框區塊 -->
+    <div class="reel-video-wrapper">
+      <div class="reel-video-container">
+        <!-- 請將 YOUR_YOUTUBE_VIDEO_ID 替換為實際的 YouTube Shorts 或影片 ID -->
+        <iframe 
+          src="https://www.youtube.com/embed/EJD4BPakBXI" 
+          title="Ep.3 Reels" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
 
     <!-- 推薦區塊 (MORE WORKS) -->
     <section class="recommend-section">
@@ -484,6 +281,7 @@
       <div class="recommend-grid" id="recommend-grid">
       </div>
     </section>
+
   </main>
 
   <script>
@@ -491,18 +289,7 @@
       history.scrollRestoration = 'manual';
     }
 
-    // 捲動淡入效果
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.story-block').forEach(el => observer.observe(el));
-
-    // 頁面轉場淡入
+    // 頁面淡入轉場
     const overlay = document.getElementById('transition-overlay');
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -516,7 +303,6 @@
       if (overlay) overlay.classList.add('hidden');
     });
 
-    // 動態綁定轉場動畫至連結
     function bindTransitionLinks() {
       document.querySelectorAll('a[href]').forEach(anchor => {
         const href = anchor.getAttribute('href');
@@ -539,7 +325,7 @@
       });
     }
 
-    // 動態推薦專案（排除當前專題 work-16，加入 work-15）
+    // 動態推薦專案（排除當前 work-16，加入其他專案）
     const CURRENT_WORK_ID = "work-16";
 
     const allProjects = [
@@ -587,36 +373,6 @@
     }
 
     renderRecommendations();
-
-    // Lightbox 功能（排除 <a> 連結包裹的圖片）
-    const modal = document.getElementById('image-modal');
-    const modalImg = document.getElementById('image-modal-img');
-    const modalClose = document.getElementById('image-modal-close');
-
-    document.querySelectorAll('.story-article img').forEach(img => {
-      if (!img.closest('a')) {
-        img.addEventListener('click', () => {
-          if (img.src) {
-            modalImg.src = img.src;
-            modalImg.alt = img.alt || '';
-            modal.classList.add('active');
-          }
-        });
-      }
-    });
-
-    function closeModal() {
-      modal.classList.remove('active');
-    }
-
-    if (modal) modal.addEventListener('click', closeModal);
-    if (modalClose) modalClose.addEventListener('click', closeModal);
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modal.classList.contains('active')) {
-        closeModal();
-      }
-    }); 
   </script>
 </body>
 </html>
