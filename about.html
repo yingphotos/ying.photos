@@ -63,19 +63,32 @@
       pointer-events: auto;
     }
 
-    /* 頁首導覽列：左 Ying (回頂頁)，右 Back (直達 About 區塊) */
+    /* ==================================================== */
+    /* 固定頁首導覽列（無分隔線、無漸變、純底色 + 平滑進出） */
+    /* ==================================================== */
     nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 28px 36px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 100;
-      mix-blend-mode: difference;
-      color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+
+    /* 與網頁背景完全同色，無邊框、無漸變、無陰影 */
+    background-color: #f5f4f3;
+    color: #111111;
+
+    /* 預設出現動畫：2.0 秒 */
+    transition: transform 2.0s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* 往下滑動隱藏：3.5 秒緩慢收起 */
+    nav.nav-hidden {
+    transform: translateY(-100%);
+    transition: transform 2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     nav .logo {
@@ -291,7 +304,7 @@
   <div class="page-transition-overlay" id="transition-overlay"></div>
 
   <!-- 頁首導覽：左 Ying (回頂頁)，右 Back (直達 About 區塊) -->
-  <nav>
+  <nav id="navbar">
     <a href="index.html#top" class="logo">Ying</a>
     <a href="index.html#about" class="back-btn">← Back</a>
   </nav>
@@ -416,6 +429,25 @@
           }, 350);
         }
       });
+    });
+
+    // ----------------------------------------------------
+    // 導覽列滾動顯示 / 隱藏控制
+    // ----------------------------------------------------
+    const navbar = document.getElementById('navbar');
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+
+      // 往下滑動超過 50px 時隱藏導覽列，往上滑動時顯示導覽列
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        navbar.classList.add('nav-hidden');
+      } else {
+        navbar.classList.remove('nav-hidden');
+      }
+
+      lastScrollY = currentScrollY;
     });
   </script>
 </body>
